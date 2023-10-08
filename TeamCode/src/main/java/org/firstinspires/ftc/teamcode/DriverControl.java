@@ -5,25 +5,20 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@TeleOp(name="TeleOp")
+@TeleOp(name = "TeleOp")
 public class DriverControl extends LinearOpMode {
-
     DcMotor backLeft;
     DcMotor backRight;
     DcMotor frontLeft;
     DcMotor frontRight;
     double speedDivider = 5;
+
     @Override
     public void runOpMode() throws InterruptedException {
-
         for (DcMotor motor : hardwareMap.getAll(DcMotor.class)) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
         }
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backRight = hardwareMap.dcMotor.get("backRight");
@@ -31,17 +26,7 @@ public class DriverControl extends LinearOpMode {
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        telemetry.addLine("Finished motor init");
-        telemetry.addData("frontRight:", frontRight.getPortNumber());
-        telemetry.addData("backRight:", backRight.getPortNumber());
-        telemetry.addData("backLeft:", backLeft.getPortNumber());
-        telemetry.addData("frontLeft",frontLeft.getPortNumber());
-        telemetry.update();
         // finished initializing
-        frontRight.setPower(1);
-        frontLeft.setPower(1);
-        backLeft.setPower(1);
-        backRight.setPower(1);
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive()) {
