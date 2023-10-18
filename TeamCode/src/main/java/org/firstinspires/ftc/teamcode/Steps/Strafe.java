@@ -35,7 +35,7 @@ public class Strafe extends AutoStep {
 
     @Override
     public void run() {
-        setFinished(distance <= frontLeft.getCurrentPosition());
+        setFinished(distance <= Math.abs(frontLeft.getCurrentPosition()));
     }
 
     @Override

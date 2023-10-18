@@ -10,6 +10,7 @@ public abstract class AutoStep implements Runnable{
     protected Telemetry telemetry = null;
     private boolean isFinished = false;
     protected boolean runOnInit = false;
+    boolean initDone = false;
     public abstract void init();
     @Override
     public abstract void run();
@@ -24,4 +25,5 @@ public abstract class AutoStep implements Runnable{
     public final void setFinished(boolean val) {
         isFinished = val;
     }
+
 }

@@ -5,11 +5,13 @@ public class RunWithTimeout extends AutoStep{
     AutoStep step;
     public RunWithTimeout(AutoStep step, double seconds) {
         this.step = step;
+        runOnInit = step.runOnInit;
         waitStep = new WaitStep(seconds);
     }
     @Override
     public void init() {
         step.setHardWareMap(hardwareMap);
+        step.setTelemetry(telemetry);
         step.init();
         waitStep.init();
     }
