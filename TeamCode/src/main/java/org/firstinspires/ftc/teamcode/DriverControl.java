@@ -7,18 +7,18 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 @TeleOp(name = "TeleOp")
 public class DriverControl extends LinearOpMode {
-    DcMotor backLeft;
+    DcMotor backLeft; 
     DcMotor backRight;
     DcMotor frontLeft;
     DcMotor frontRight;
     double speedDivider = 5;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         for (DcMotor motor : hardwareMap.getAll(DcMotor.class)) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backRight = hardwareMap.dcMotor.get("backRight");
@@ -42,6 +42,11 @@ public class DriverControl extends LinearOpMode {
             double backLeftPower = (y - x + rx) / denominator;
             double frontRightPower = (y - x - rx) / denominator;
             double backRightPower = (y + x - rx) / denominator;
+            telemetry.addData("FrontLeft", frontLeftPower);
+            telemetry.addData("BackLeft", backLeftPower);
+            telemetry.addData("FrontRight", frontRightPower);
+            telemetry.addData("BackRight", backRightPower);
+            telemetry.update();
             //sets motor power
             frontLeft.setPower(frontLeftPower);
             backLeft.setPower(backLeftPower);
