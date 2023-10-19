@@ -14,7 +14,7 @@ public class DriverControl extends LinearOpMode {
     double speedDivider = 5;
 
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
         for (DcMotor motor : hardwareMap.getAll(DcMotor.class)) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
