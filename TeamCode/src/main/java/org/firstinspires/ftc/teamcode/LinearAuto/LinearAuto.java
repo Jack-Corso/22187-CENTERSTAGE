@@ -10,7 +10,9 @@ public abstract class LinearAuto extends LinearOpMode {
         this.steps = steps;
         totalSteps = steps.length-1;
     }
-
+    public final StepSeries toStepSeries() {
+        return new StepSeries(steps);
+    }
     @Override
     public void runOpMode() throws InterruptedException {
         int currentStep = 0;

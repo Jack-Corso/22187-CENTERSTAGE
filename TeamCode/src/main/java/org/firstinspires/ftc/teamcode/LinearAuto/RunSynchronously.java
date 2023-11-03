@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.LinearAuto;
 
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
 
+import java.util.Arrays;
+
 public class RunSynchronously extends AutoStep {
     AutoStep[] steps;
     public RunSynchronously(AutoStep... steps) {
@@ -24,9 +26,7 @@ public class RunSynchronously extends AutoStep {
                 step.run();
             }
             else {
-                finishedSteps++;
-                setFinished(finishedSteps == steps.length-1);
-
+                setFinished(Arrays.stream(steps).allMatch(AutoStep::isFinished));
             }
 
         }
@@ -35,6 +35,7 @@ public class RunSynchronously extends AutoStep {
     protected void onFinish() {
         for (AutoStep step : steps) {
             step.onFinish();
+
         }
     }
 }

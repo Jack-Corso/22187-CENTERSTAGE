@@ -10,13 +10,15 @@ import org.firstinspires.ftc.vision.tfod.TfodProcessor;
 import java.util.List;
 
 public class ReadTfod extends AutoStep {
+    public static final String RED = "red";
+    public static final String BLUE = "blue";
     private static final boolean USE_WEBCAM = true;  // true for webcam, false for phone camera
     // TFOD_MODEL_FILE points to a model file stored onboard the Robot Controller's storage,
     // this is used when uploading models directly to the RC using the model upload interface.
-    private static final String TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/redElement.tflite";
+    private final String TFOD_MODEL_FILE; //= "/sdcard/FIRST/tflitemodels/redElement.tflite";
     // Define the labels recognized in the model for TFOD (must be in training order!)
     private static final String[] LABELS = {
-            "red",
+            "b",
             "r"
     };
     static int result = 0;
@@ -31,11 +33,14 @@ public class ReadTfod extends AutoStep {
     private VisionPortal visionPortal;
 
 
-    public ReadTfod() {
+    public ReadTfod(String type) {
+        if (!type.equals(RED) && !type.equals(BLUE)) throw new IllegalArgumentException("Invalid type, use \"red\" or \"blue\", or the static variables");
         runOnInit = true;
+        TFOD_MODEL_FILE = "/sdcard/FIRST/tflitemodels/" + type + "Element.tflite";
     }
     @Override
     public void init() {
+        result = 0;
         initTfod();
         telemetry.addLine("Tfod initialized");
         telemetry.update();
@@ -49,9 +54,11 @@ public class ReadTfod extends AutoStep {
 
     @Override
     protected void onFinish() {
-        telemetry.addLine(String.valueOf(result));
+        telemetry.addLine(String.valueOf(ReadTfod.getResult()));
+        telemetry.addLine(String.valueOf(getResult()));
         telemetry.update();
         visionPortal.close();
+        tfod.shutdown();
     }
     private void initTfod() {
 
@@ -121,8 +128,16 @@ public class ReadTfod extends AutoStep {
         for (Recognition recognition : currentRecognitions) {
             double x = (recognition.getLeft() + recognition.getRight()) / 2 ;
             double y = (recognition.getTop()  + recognition.getBottom()) / 2 ;
-            if (x < 320) ReadTfod.setResult(1);
-            else if (!currentRecognitions.isEmpty()) ReadTfod.setResult(2);
+            if (x < 320) {
+                ReadTfod.setResult(1);
+                setFinished(true);
+                currentRecognitions.clear();
+            }
+            else if (!currentRecognitions.isEmpty())  {
+                ReadTfod.setResult(2);
+                setFinished(true);
+                currentRecognitions.clear();
+            }
             setFinished(true);
             telemetry.addData(""," ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class PIDController {
     double Kp;
     double Ki;
@@ -12,6 +14,7 @@ public class PIDController {
     int pos;
     double integral;
     double derivative;
+    boolean finished = false;
     ElapsedTime timer = new ElapsedTime();
     public PIDController(double Kp, double Ki, double Kd) {
         this.Kp = Kp;
@@ -31,6 +34,7 @@ public class PIDController {
         derivative = (error - lastError) / timer.seconds();
         out = (Kp * error) + (Ki * integral) + (Kd * derivative);
         lastError = error;
+        finished = Math.abs(out) < 0.1;
         return out;
     }
     public double getError() {
@@ -41,5 +45,17 @@ public class PIDController {
     }
     public double getDerivative() {
         return derivative;
+    }
+
+    /**
+     * prints error, integral, and derivative to telemetry
+     */
+    public void toTelemetry(Telemetry t) {
+        t.addData("Error", getError());
+        t.addData("Integral", getIntegral());
+        t.addData("Derivative",getDerivative());
+    }
+    public boolean isFinished() {
+        return finished;
     }
 }

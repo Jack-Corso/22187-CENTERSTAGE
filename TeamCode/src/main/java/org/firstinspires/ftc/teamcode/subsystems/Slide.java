@@ -8,6 +8,7 @@ public class Slide {
     DcMotor slide;
     public static final int PICKUP = 1465;
     public static final int DROPOFF = 235;
+    public static final int HOME = 0;
     public Slide(HardwareMap h) {
         rotate = h.dcMotor.get("rotateSlide");
         slide = h.dcMotor.get("slide");

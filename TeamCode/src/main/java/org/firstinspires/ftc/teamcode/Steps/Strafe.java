@@ -27,9 +27,9 @@ public class Strafe extends AutoStep {
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setPower(speed);
+        frontLeft.setPower(-speed);
         frontRight.setPower(-speed);
-        backLeft.setPower(-speed);
+        backLeft.setPower(speed);
         backRight.setPower(speed);
     }
 
