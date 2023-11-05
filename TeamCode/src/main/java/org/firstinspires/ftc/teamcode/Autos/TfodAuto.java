@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.Steps.Strafe;
 public class TfodAuto extends LinearAuto {
     public TfodAuto() {
         super(
-            new TfodBase(new ReadTfod(ReadTfod.RED))
+            new TfodBase(ReadTfod.RED)
         );
     }
 }

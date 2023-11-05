@@ -18,7 +18,7 @@ public class DriverControl extends LinearOpMode {
     public void runOpMode() {
         for (DcMotor motor : hardwareMap.getAll(DcMotor.class)) {
             motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            // motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
@@ -49,6 +49,10 @@ public class DriverControl extends LinearOpMode {
             else if (gamepad2.b) {
                 claw.setRotate(0.5);
                 rotateArm.setTargetPos(0);
+            }
+            else if (gamepad2.a) {
+                claw.setRotate(Claw.PICKUP);
+                rotateArm.setTargetPos(Slide.UNDER_FRAME);
             }
             // control claw
             if (gamepad2.left_bumper) claw.setClaw(0);

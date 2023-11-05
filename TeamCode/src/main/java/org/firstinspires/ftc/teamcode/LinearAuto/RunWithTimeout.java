@@ -1,31 +1,41 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 public class RunWithTimeout extends AutoStep{
-    WaitStep waitStep;
+    double seconds;
     AutoStep step;
+    ElapsedTime time = new ElapsedTime();
+    boolean started = false;
     public RunWithTimeout(AutoStep step, double seconds) {
         this.step = step;
         runOnInit = step.runOnInit;
-        waitStep = new WaitStep(seconds);
+        this.seconds = seconds;
     }
     @Override
     public void init() {
         step.setHardWareMap(hardwareMap);
         step.setTelemetry(telemetry);
         step.init();
-        waitStep.init();
+        if (!runOnInit) {
+            started = true;
+            time.reset();
+        }
     }
 
     @Override
     public void run() {
-        waitStep.run();
+        if (runOnInit && !started) {
+            time.reset();
+            started = true;
+        }
         step.run();
-        setFinished(waitStep.isFinished() || step.isFinished());
+        setFinished(time.seconds() >= seconds || step.isFinished());
     }
 
     @Override
     protected void onFinish() {
         step.onFinish();
-        waitStep.onFinish();
+
     }
 }

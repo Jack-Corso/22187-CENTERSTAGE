@@ -5,6 +5,7 @@ import org.firstinspires.ftc.teamcode.R;
 public class RunIf extends AutoStep{
     boolean condition;
     AutoStep step;
+    //TODO try using BooleanSupplier?
     public RunIf(boolean condition, AutoStep step) {
         setFinished(!condition);
         this.condition = condition;

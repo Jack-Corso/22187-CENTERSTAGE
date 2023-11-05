@@ -24,9 +24,11 @@ public class MoveForwardAuto extends LinearAuto {
     int i = 5;
     public MoveForwardAuto() {
         super(
-                new RotateClaw(Claw.PICKUP),
-                new RotateClaw(0),
-                new RotateClaw(Claw.DROPOFF)
+                new Rotate(90),
+                new WaitStep(3),
+                new Rotate(-90),
+                new WaitStep(3),
+                new Rotate(180)
         );
     }
 }
