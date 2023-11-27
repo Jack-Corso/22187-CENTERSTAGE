@@ -98,18 +98,32 @@ public abstract class AutoStep implements Runnable{
      * @param step the step to run
      * @param h the {@link HardwareMap} to be passed into the step
      * @param t the {@link Telemetry} to be passed into the step
+     * @see #runStepInLoop(AutoStep, HardwareMap, Telemetry)
      */
     public static void runStep(AutoStep step,HardwareMap h, Telemetry t) {
-        step.setTelemetry(t);
-        step.setHardWareMap(h);
-        while (!step.isFinished()) {
-            if (!step.initDone) {
-                step.init();
-                step.initDone = true;
-            }
-            step.run();
-        }
-        step.onFinish();
+        while (!runStepInLoop(step,h,t));
     }
 
+    /**
+     * Runs a given step's current method once. It is the users responsibility to stop running the step when it is finished, as it will continue to call {@link #onFinish()}. Runs with the same specifications as {@link #runStep(AutoStep, HardwareMap, Telemetry)}
+     * @param step the step to run
+     * @param h the {@link HardwareMap} to be passed into the step
+     * @param t the {@link Telemetry} to be passed into the step
+     * @return the value returned by {@link #isFinished()}
+     * @see #runStep(AutoStep, HardwareMap, Telemetry)
+     */
+    public static boolean runStepInLoop(AutoStep step, HardwareMap h, Telemetry t) {
+        if (!step.isFinished()) {
+            if (!step.initDone) {
+                step.setTelemetry(t);
+                step.setHardWareMap(h);
+                step.init();
+                step.initDone = true;
+            } else {
+                step.run();
+            }
+        }
+        if (step.isFinished()) step.onFinish();
+        return step.isFinished();
+    }
 }

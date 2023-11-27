@@ -16,7 +16,7 @@ public class Rotate extends AutoStep {
     IMU imu;
     DriveTrain driveTrain;
     int degrees;
-
+    double prevDegrees;
     PIDController pidController = new PIDController(0.02,0.00004,0.1);
 
     /**
@@ -26,14 +26,15 @@ public class Rotate extends AutoStep {
     public Rotate(int degrees) {
         // uses negative value so positive = right
         this.degrees = -degrees;
-        pidController.setTargetPos(-degrees);
+
     }
     @Override
     public void init() {
         imu = hardwareMap.get(IMU.class, "imu");
-        imu.resetYaw();
         driveTrain = new DriveTrain(hardwareMap);
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+        imu.resetYaw();
+        pidController.setTargetPos(degrees);
         setFinished(degrees == (int) imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
     }
 
@@ -51,5 +52,13 @@ public class Rotate extends AutoStep {
     @Override
     protected void onFinish() {
         driveTrain.setAll(0);
+    }
+    private int convertToPositive360(int degrees) {
+        if (degrees < 0) return degrees+361;
+        return degrees;
+    }
+    private int convertToNegative360(int degrees) {
+        if (degrees > 0) return degrees-361;
+        return degrees;
     }
 }

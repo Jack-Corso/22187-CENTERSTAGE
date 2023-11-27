@@ -13,16 +13,17 @@ public class PIDController {
     double Kp;
     double Ki;
     double Kd;
-    int error = 0;
-    int lastError;
+    double error = 0;
+    double lastError;
     int pos;
     double integral;
     double derivative;
-    ArrayList<Boolean> finished = new ArrayList<>(List.of(false,false,false,false,false));
+    ArrayList<Boolean> finished = new ArrayList<>();
 
     ElapsedTime timer = new ElapsedTime();
     public PIDController(double Kp, double Ki, double Kd) {
-
+        // check 50 times before setFinished
+        for (int i = 0; i < 10; i++) finished.add(false);
         this.Kp = Kp;
         this.Ki = Ki;
         this.Kd = Kd;
@@ -33,7 +34,7 @@ public class PIDController {
         lastError = 0;
         integral = 0;
     }
-    public double motorSpeed(int currentPos) {
+    public double motorSpeed(double currentPos) {
         double out;
         error = pos - currentPos;
         integral += (error * timer.seconds());

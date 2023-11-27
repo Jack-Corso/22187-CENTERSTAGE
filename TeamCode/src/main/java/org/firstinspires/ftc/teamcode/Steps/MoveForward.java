@@ -34,7 +34,7 @@ public class MoveForward extends AutoStep {
     }
     @Override
     public void run() {
-        setFinished(distance <= Math.abs(frontLeft.getCurrentPosition()));
+        setFinished(distance <= Math.abs((frontLeft.getCurrentPosition()+frontRight.getCurrentPosition())/2));
     }
     @Override
     public void onFinish() {
