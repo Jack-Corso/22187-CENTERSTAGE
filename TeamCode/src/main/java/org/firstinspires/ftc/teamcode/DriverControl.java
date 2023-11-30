@@ -40,11 +40,11 @@ public class DriverControl extends LinearOpMode {
             // control slide rotation
             if (gamepad2.y) {
                 claw.setRotate(0);
-                rotateArm.setTargetPos(Slide.DROPOFF);
+               // rotateArm.setTargetPos(Slide.DROPOFF);
             }
             else if (gamepad2.x) {
                 claw.setRotate(0.25);
-                rotateArm.setTargetPos(Slide.PICKUP);
+               // rotateArm.setTargetPos(Slide.PICKUP);
             }
             else if (gamepad2.b) {
                 claw.setRotate(0.5);
@@ -52,7 +52,7 @@ public class DriverControl extends LinearOpMode {
             }
             else if (gamepad2.a) {
                 claw.setRotate(Claw.PICKUP);
-                rotateArm.setTargetPos(Slide.UNDER_FRAME);
+               // rotateArm.setTargetPos(Slide.UNDER_FRAME);
             }
             // control claw
             if (gamepad2.left_bumper) claw.setClaw(0);
@@ -73,22 +73,22 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("BackLeft", driveTrain.getBackLeft());
             telemetry.addData("FrontRight", driveTrain.getFrontRight());
             telemetry.addData("BackRight", driveTrain.getBackRight());
-            telemetry.addData("Slide Rotation", slide.getRotate());
+            //telemetry.addData("Slide Rotation", slide.getRotate());
             telemetry.addData("Slide",slide.getSlide());
-            telemetry.addData("Slide motorSpeed",rotateArm.motorSpeed(slide.getRotate()));
+            //telemetry.addData("Slide motorSpeed",rotateArm.motorSpeed(slide.getRotate()));
             telemetry.addData("Error", rotateArm.getError());
             telemetry.addData("Integral", rotateArm.getIntegral());
             telemetry.addData("Deritvative", rotateArm.getDerivative());
             telemetry.update();
             //sets motor power
             driveTrain.setMotorSpeeds(frontLeftPower,backLeftPower,backRightPower,frontRightPower);
-            if (rotateArm.motorSpeed(slide.getRotate()) > 1) {
-                slide.setRotate(1);
-            } else if (rotateArm.motorSpeed(slide.getRotate()) < -1) {
-                slide.setRotate(-1);
-            } else {
-                slide.setRotate(rotateArm.motorSpeed(slide.getRotate()));
-            }
+//            if (rotateArm.motorSpeed(slide.getRotate()) > 1) {
+//                slide.setRotate(1);
+//            } else if (rotateArm.motorSpeed(slide.getRotate()) < -1) {
+//                slide.setRotate(-1);
+//            } else {
+//                slide.setRotate(rotateArm.motorSpeed(slide.getRotate()));
+//            }
         }
     }
 }

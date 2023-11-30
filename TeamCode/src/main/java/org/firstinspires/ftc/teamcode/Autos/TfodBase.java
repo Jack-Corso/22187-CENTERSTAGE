@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.Steps.RotateSlide;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
-public class TfodBase extends StepSeries {
+public class  TfodBase extends StepSeries {
    // static ReadTfod readTfod;
 //    public TfodBase(String color) {
 //        super(
