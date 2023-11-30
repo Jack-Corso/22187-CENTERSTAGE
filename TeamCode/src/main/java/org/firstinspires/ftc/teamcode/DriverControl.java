@@ -58,16 +58,27 @@ public class DriverControl extends LinearOpMode {
             telemetry.addData("BackLeft", driveTrain.getBackLeft());
             telemetry.addData("FrontRight", driveTrain.getFrontRight());
             telemetry.addData("BackRight", driveTrain.getBackRight());
-            telemetry.addData("Slide Rotation", slide.getRotate());
+            //telemetry.addData("Slide Rotation", slide.getRotate());
             telemetry.addData("Slide",slide.getSlide());
-            telemetry.addData("Slide motorSpeed",rotateArm.motorSpeed(slide.getRotate()));
+            //telemetry.addData("Slide motorSpeed",rotateArm.motorSpeed(slide.getRotate()));
             telemetry.addData("Error", rotateArm.getError());
             telemetry.addData("Integral", rotateArm.getIntegral());
             telemetry.addData("Derivative", rotateArm.getDerivative());
             telemetry.update();
             //sets motor power
+<<<<<<< HEAD
             driveTrain.setMotorSpeeds(frontRightPower,backRightPower,frontLeftPower,backLeftPower);
 
+=======
+            driveTrain.setMotorSpeeds(frontLeftPower,backLeftPower,backRightPower,frontRightPower);
+//            if (rotateArm.motorSpeed(slide.getRotate()) > 1) {
+//                slide.setRotate(1);
+//            } else if (rotateArm.motorSpeed(slide.getRotate()) < -1) {
+//                slide.setRotate(-1);
+//            } else {
+//                slide.setRotate(rotateArm.motorSpeed(slide.getRotate()));
+//            }
+>>>>>>> teleop
         }
     }
 }
