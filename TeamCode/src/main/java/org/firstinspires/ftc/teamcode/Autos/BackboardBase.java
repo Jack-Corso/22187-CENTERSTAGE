@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autos;
 import org.firstinspires.ftc.teamcode.LinearAuto.InitStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.RaceSynchronously;
 import org.firstinspires.ftc.teamcode.LinearAuto.RunWithTimeout;
+import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.StepSeries;
 import org.firstinspires.ftc.teamcode.LinearAuto.ToTelemetry;
 import org.firstinspires.ftc.teamcode.LinearAuto.WaitStep;
@@ -14,10 +15,12 @@ import org.firstinspires.ftc.teamcode.Steps.Rotate;
 import org.firstinspires.ftc.teamcode.Steps.RotateClaw;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.PixelBox;
 
 import java.util.function.IntSupplier;
 
 public class BackboardBase extends StepSeries {
+    static RunnableStep r;
     public BackboardBase(IntSupplier ID) {
         super(
                 //todo GO TO 1 AND STRAFE UNTIL DETECT
@@ -33,8 +36,7 @@ public class BackboardBase extends StepSeries {
                 new ToTelemetry("at 2!", false),
                 //new MoveForward(6,0.5),
                 new WaitStep(0.1),
-                new RotateClaw(Claw.DROPOFF),
-                new MoveClaw(Claw.OPEN),
+                r = new RunnableStep(()->new PixelBox(r.getHardwareMap()).setRotate(Claw.OPEN)),
                 new WaitStep(1),
                 new MoveForward(5,-0.5)
         );

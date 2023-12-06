@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Dropper {
     Servo servo;
     double storedPos = 0;
-    public static final double open = 0.5;
-    public static final double close = 1;
+    public static final double drop = 0.5;
+    public static final double clamp = 1;
     public Dropper(HardwareMap h) {
         servo = h.get(Servo.class, "dropper");
     }

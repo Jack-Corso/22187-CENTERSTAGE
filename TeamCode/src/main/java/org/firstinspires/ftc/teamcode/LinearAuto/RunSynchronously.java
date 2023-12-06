@@ -7,9 +7,11 @@ import java.util.Objects;
 
 public class RunSynchronously extends AutoStep {
     AutoStep[] steps;
+    AutoStep[] removed;
     public RunSynchronously(AutoStep... steps) {
         this.steps = steps;
         runOnInit = true;
+        removed = new AutoStep[steps.length];
     }
 
     @Override
@@ -40,6 +42,7 @@ public class RunSynchronously extends AutoStep {
             if (!step.isFinished()) step.run();
             else {
                 step.onFinish();
+                removed[i] = step;
                 steps[i] = null;
             }
         }
@@ -47,9 +50,8 @@ public class RunSynchronously extends AutoStep {
     }
     @Override
     protected void onFinish() {
-        for (AutoStep step : steps) {
+        for (AutoStep step : removed) {
             step.onFinish();
-
         }
     }
 }

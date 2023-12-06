@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.Steps;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.ImuOrientationOnRobot;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
@@ -11,13 +14,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
 import org.firstinspires.ftc.teamcode.PIDController;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
-
+@Config
 public class Rotate extends AutoStep {
     IMU imu;
     DriveTrain driveTrain;
     int degrees;
     double prevDegrees;
-    PIDController pidController = new PIDController(0.02,0.00004,0.1);
+    public static PIDCoefficients pidCoefficients = new PIDCoefficients(0.05,0,0.08); // public static for dashboard
+    private PIDController pidController;
 
     /**
      *
@@ -30,9 +34,10 @@ public class Rotate extends AutoStep {
     }
     @Override
     public void init() {
+        pidController = new PIDController(pidCoefficients);
         imu = hardwareMap.get(IMU.class, "imu");
         driveTrain = new DriveTrain(hardwareMap);
-        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.UP)));
+        imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
         imu.resetYaw();
         pidController.setTargetPos(degrees);
         setFinished(degrees == (int) imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));

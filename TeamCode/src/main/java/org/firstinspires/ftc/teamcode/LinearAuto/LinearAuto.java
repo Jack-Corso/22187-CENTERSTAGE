@@ -2,15 +2,17 @@ package org.firstinspires.ftc.teamcode.LinearAuto;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-public abstract class LinearAuto extends LinearOpMode {
+public abstract class LinearAuto extends LinearOpMode implements Stepable{
     //todo make this use StepSeries (its basically the same code)
+    /*todo make a "Stepable" functional interface with a "toStep()" method that returns an AutoStep and make all AutoStep arguments into Stepable
+    todo example: public LinearAuto(Stepable... steps) then translate it into an AutoStep using the "toStep()" method*/
     AutoStep[] steps;
     int totalSteps = 0;
     public LinearAuto(AutoStep... steps) {
         this.steps = steps;
         totalSteps = steps.length-1;
     }
-    public final StepSeries toStepSeries() {
+    public final AutoStep toAutoStep() {
         return new StepSeries(steps);
     }
     @Override

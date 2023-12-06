@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.sun.tools.javac.util.List;
 
@@ -19,7 +20,7 @@ public class PIDController {
     double integral;
     double derivative;
     ArrayList<Boolean> finished = new ArrayList<>();
-
+    int loops = 0;
     ElapsedTime timer = new ElapsedTime();
     public PIDController(double Kp, double Ki, double Kd) {
         // check 50 times before setFinished
@@ -28,13 +29,18 @@ public class PIDController {
         this.Ki = Ki;
         this.Kd = Kd;
     }
+    public PIDController(PIDCoefficients pidCoefficients) {
+        this(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
+    }
     public void setTargetPos(int pos) {
         timer.reset();
         this.pos = pos;
         lastError = 0;
         integral = 0;
+        loops = 0;
     }
     public double motorSpeed(double currentPos) {
+        loops++;
         double out;
         error = pos - currentPos;
         integral += (error * timer.seconds());
@@ -61,6 +67,11 @@ public class PIDController {
         t.addData("Error", getError());
         t.addData("Integral", getIntegral());
         t.addData("Derivative",getDerivative());
+        //num of 'true' values in the finished array
+        t.addData("FinishedTicks",finished.stream().filter(i->i).toArray().length);
+        t.addData("Time Running (milliseconds)",timer.milliseconds());
+        t.addData("Iterations",loops);
+        t.addData("average loop time",timer.milliseconds()/loops);
     }
     public boolean isFinished() {
         return finished.stream().allMatch(i -> i);

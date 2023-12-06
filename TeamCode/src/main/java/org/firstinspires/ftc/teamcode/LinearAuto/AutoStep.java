@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  *     {@link #init()}, {@link #run()} (looping), {@link #onFinish()}. <p>
  *     The method {@link #runStep(AutoStep, HardwareMap, Telemetry)} can be used to execute a step fully
  */
-public abstract class AutoStep implements Runnable{
+public abstract class AutoStep implements Runnable, Stepable{
     /**
      * The {@link HardwareMap} instance passed in before the steps initialization. <p>
      * NOTE: This is not passed in on construction, and will be null until {@link #init()}
@@ -125,5 +125,14 @@ public abstract class AutoStep implements Runnable{
         }
         if (step.isFinished()) step.onFinish();
         return step.isFinished();
+    }
+
+    /**
+     * Simply returns itself, allowing all AutoSteps to be used as a {@link Stepable}
+     * @return itself, "this"
+     */
+    @Override
+    public final AutoStep toAutoStep() {
+        return this;
     }
 }

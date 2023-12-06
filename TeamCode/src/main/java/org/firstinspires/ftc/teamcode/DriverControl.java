@@ -8,7 +8,10 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.teamcode.Steps.AprilTag;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.Hanger;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
+import org.firstinspires.ftc.teamcode.subsystems.PixelBox;
 import org.firstinspires.ftc.teamcode.subsystems.Slide;
 
 @TeleOp(name = "TeleOp")
@@ -23,10 +26,12 @@ public class DriverControl extends LinearOpMode {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
-        Slide slide = new Slide(hardwareMap);
-        Claw claw = new Claw(hardwareMap);
+        //Claw claw = new Claw(hardwareMap);
         Launcher launcher = new Launcher(hardwareMap);
-        PIDController rotateArm = new PIDController(0.004,0,0.001);
+        Intake intake = new Intake(hardwareMap);
+        Hanger hang = new Hanger(hardwareMap);
+        Slide slide = new Slide(hardwareMap);
+        PixelBox box = new PixelBox(hardwareMap);
         AprilTag.DriveTo driveTo;
         boolean atGoal = true;
         //rotateArm.setTargetPos(0);
@@ -36,14 +41,28 @@ public class DriverControl extends LinearOpMode {
             //increase speed if right trigger is down
             speedDivider = 1;
             if (gamepad1.right_trigger > 0) speedDivider = 0.000001;
-            //control slide
-            if (gamepad2.y) slide.setRotate(1);
-            else if (gamepad2.x) slide.setRotate(-1);
-            else slide.setRotate(0);
-            slide.setSlide(gamepad2.right_trigger - gamepad2.left_trigger);
+            // control intake
+            intake.setPower((int)gamepad2.right_trigger - (int) gamepad2.left_trigger);
+
+            // control hanging
+            if (gamepad2.b) hang.setPower(1);
+            else if (gamepad2.a) hang.setPower(-1);
+            else hang.setPower(0);
+
+            // control slide
+            if (gamepad2.y) slide.setSlide(1);
+            else if (gamepad2.x) slide.setSlide(-1);
+            else slide.setSlide(0);
+
+            // control outtake box door
+            if (gamepad2.left_bumper) box.setDoor(PixelBox.doorPositions.open);
+            else if (gamepad2.right_bumper) box.setDoor(PixelBox.doorPositions.close);
+
+            // control outtake box rotation
+            if (gamepad2.dpad_left) box.setRotate(Claw.CLOSE);
+            else if (gamepad2.dpad_right) box.setRotate(Claw.OPEN);
             if (gamepad2.dpad_up && gamepad2.left_stick_button && gamepad2.right_stick_button) launcher.set(1);
-            if (gamepad2.a) claw.setRotate(1);
-            else if (gamepad2.b) claw.setRotate(Claw.DROPOFF);
+
             // control claw rotation
             // make the robot move with the controller
             double y = -gamepad1.left_stick_y / speedDivider; // Remember, this is reversed!
@@ -61,16 +80,9 @@ public class DriverControl extends LinearOpMode {
             //telemetry.addData("Slide Rotation", slide.getRotate());
             telemetry.addData("Slide",slide.getSlide());
             //telemetry.addData("Slide motorSpeed",rotateArm.motorSpeed(slide.getRotate()));
-            telemetry.addData("Error", rotateArm.getError());
-            telemetry.addData("Integral", rotateArm.getIntegral());
-            telemetry.addData("Derivative", rotateArm.getDerivative());
             telemetry.update();
             //sets motor power
-<<<<<<< HEAD
             driveTrain.setMotorSpeeds(frontRightPower,backRightPower,frontLeftPower,backLeftPower);
-
-=======
-            driveTrain.setMotorSpeeds(frontLeftPower,backLeftPower,backRightPower,frontRightPower);
 //            if (rotateArm.motorSpeed(slide.getRotate()) > 1) {
 //                slide.setRotate(1);
 //            } else if (rotateArm.motorSpeed(slide.getRotate()) < -1) {
@@ -78,7 +90,7 @@ public class DriverControl extends LinearOpMode {
 //            } else {
 //                slide.setRotate(rotateArm.motorSpeed(slide.getRotate()));
 //            }
->>>>>>> teleop
+
         }
     }
 }

@@ -34,10 +34,8 @@ import java.util.function.IntSupplier;
 public class MoveForwardAuto extends LinearAuto {
     public MoveForwardAuto() {
         super(
-                new RunSynchronously(
-                        new Odometry.Run(),
-                        new MoveForward(24,0.5)
-                )
+                new MoveForward(48,0.25),
+                new WaitStep(15)
         );
     }
 }
