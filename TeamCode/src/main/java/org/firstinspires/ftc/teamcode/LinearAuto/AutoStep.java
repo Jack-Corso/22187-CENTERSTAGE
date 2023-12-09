@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -105,7 +107,11 @@ public abstract class AutoStep implements Runnable, Stepable{
     }
 
     /**
-     * Runs a given step's current method once. It is the users responsibility to stop running the step when it is finished, as it will continue to call {@link #onFinish()}. Runs with the same specifications as {@link #runStep(AutoStep, HardwareMap, Telemetry)}
+     * Runs a given step's current method once. It is the users responsibility to stop running the step when it is finished, as it will continue to call {@link #onFinish()} every call after it finishes.
+     * Runs with the same specifications as {@link #runStep(AutoStep, HardwareMap, Telemetry)}
+     * <p>
+     *     NOTE: when the step finishes, {@link #onFinish()} is called, even if this method has already called {@link #init()} or {@link #run()}
+     * </p>
      * @param step the step to run
      * @param h the {@link HardwareMap} to be passed into the step
      * @param t the {@link Telemetry} to be passed into the step
@@ -126,10 +132,19 @@ public abstract class AutoStep implements Runnable, Stepable{
         if (step.isFinished()) step.onFinish();
         return step.isFinished();
     }
+    public static boolean initializeStep(AutoStep step, HardwareMap h, Telemetry t) {
+        if (step.initDone) return false;
+        step.setTelemetry(t);
+        step.setHardWareMap(h);
+        step.init();
+        step.initDone = true;
+        return true;
+
+    }
 
     /**
      * Simply returns itself, allowing all AutoSteps to be used as a {@link Stepable}
-     * @return itself, "this"
+     * @return itself, using 'this'
      */
     @Override
     public final AutoStep toAutoStep() {

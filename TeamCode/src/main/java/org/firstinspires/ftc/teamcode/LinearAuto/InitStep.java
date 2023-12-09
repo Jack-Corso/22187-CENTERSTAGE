@@ -11,15 +11,7 @@ public class InitStep extends AutoStep{
     }
     @Override
     public void init() {
-        step.setTelemetry(telemetry);
-        step.setHardWareMap(hardwareMap);
-        while (!step.isFinished()) {
-            if (!step.initDone) {
-                step.setTelemetry(telemetry);
-                step.setHardWareMap(hardwareMap);
-                step.init();
-            } else step.run();
-        }
+        AutoStep.runStep(step,hardwareMap,telemetry);
         setFinished(true);
     }
 

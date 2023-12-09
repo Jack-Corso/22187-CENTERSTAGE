@@ -5,11 +5,17 @@ import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
 import java.util.Arrays;
 import java.util.Objects;
 
+/**
+ * Runs the given steps "at the same time", this does NOT use multithreading,
+ * instead calling the appropriate method for each unfinished step repeatedly. Once all given steps are finished, this step also finishes.
+ * <p>
+ * Note: steps methods are called in the order the steps were passed in, and {@link AutoStep#onFinish()} is called directly after a step finishes, not after all steps finish
+ */
 public class RunSynchronously extends AutoStep {
     AutoStep[] steps;
     AutoStep[] removed;
-    public RunSynchronously(AutoStep... steps) {
-        this.steps = steps;
+    public RunSynchronously(Stepable... steps) {
+        this.steps = Stepable.toAutoStepArray(steps);
         runOnInit = true;
         removed = new AutoStep[steps.length];
     }

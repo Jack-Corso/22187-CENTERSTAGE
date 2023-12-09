@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
@@ -10,6 +11,9 @@ import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;
 import java.util.Arrays;
 
 public class Odometry {
+    public static final String leftName = "hang"; // port 0
+    public static final String rightName = "right"; // port 2
+    public static final String middleName = "intake"; // port 1
     //todo fix ticksPerInch
     public static final double rightY = 6;
     public static final double leftY = -6;
@@ -50,9 +54,9 @@ public class Odometry {
         DcMotor back;
         @Override
         public void init() {
-            right = hardwareMap.dcMotor.get("right");
-            left = hardwareMap.dcMotor.get("hang"); //port 0
-            back = hardwareMap.dcMotor.get("back");
+            right = hardwareMap.dcMotor.get(rightName);
+            left = hardwareMap.dcMotor.get(leftName); //port 0
+            back = hardwareMap.dcMotor.get(middleName);
             right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             back.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

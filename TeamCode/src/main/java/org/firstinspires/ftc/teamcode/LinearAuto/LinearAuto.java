@@ -1,49 +1,34 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import androidx.annotation.NonNull;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.Blinker;
+
+import org.firstinspires.ftc.teamcode.Autos.TfodAutoBluePark;
+
+import java.util.Arrays;
+import java.util.function.IntFunction;
+
+/**
+ * Runs the given {@link AutoStep}s in order, calling steps
+ */
 public abstract class LinearAuto extends LinearOpMode implements Stepable{
-    //todo make this use StepSeries (its basically the same code)
-    /*todo make a "Stepable" functional interface with a "toStep()" method that returns an AutoStep and make all AutoStep arguments into Stepable
-    todo example: public LinearAuto(Stepable... steps) then translate it into an AutoStep using the "toStep()" method*/
-    AutoStep[] steps;
-    int totalSteps = 0;
-    public LinearAuto(AutoStep... steps) {
-        this.steps = steps;
-        totalSteps = steps.length-1;
+    StepSeries stepSeries;
+    public LinearAuto(Stepable... steps) {
+        stepSeries = new StepSeries(steps);
     }
+    @Override
     public final AutoStep toAutoStep() {
-        return new StepSeries(steps);
+        return stepSeries;
     }
     @Override
     public void runOpMode() throws InterruptedException {
-        int currentStep = 0;
-        for (AutoStep step : steps) {
-            if (step.runOnInit) {
-                step.setHardWareMap(hardwareMap);
-                step.setTelemetry(telemetry);
-                step.init();
-                step.initDone = true;
-            }
+        for (AutoStep step : stepSeries.steps) {
+            if (step.runOnInit) AutoStep.initializeStep(step,hardwareMap,telemetry);
         }
         waitForStart();
-        while (opModeIsActive()) {
-            if (!steps[currentStep].initDone) {
-                steps[currentStep].setTelemetry(telemetry);
-                steps[currentStep].setHardWareMap(hardwareMap);
-                steps[currentStep].init();
-                steps[currentStep].initDone = true;
-            }
-            steps[currentStep].run();
-            if (steps[currentStep].isFinished()) {
-                steps[currentStep].onFinish();
-                if (currentStep < totalSteps) {
-                    currentStep++;
-                } else {
-                    requestOpModeStop();
-                }
-            }
-
-        }
+        AutoStep.runStep(stepSeries,hardwareMap,telemetry);
+        requestOpModeStop();
     }
 }
