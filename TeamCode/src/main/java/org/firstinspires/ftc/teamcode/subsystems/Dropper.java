@@ -7,7 +7,7 @@ public class Dropper {
     Servo servo;
     double storedPos = 0;
     public static final double drop = 0.5;
-    public static final double clamp = 1;
+    public static final double clamp = 0;
     public Dropper(HardwareMap h) {
         servo = h.get(Servo.class, "dropper");
     }

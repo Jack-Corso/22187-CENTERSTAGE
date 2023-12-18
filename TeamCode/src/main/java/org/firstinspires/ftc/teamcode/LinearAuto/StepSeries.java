@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.LinearAuto;
 
 
 public class StepSeries extends AutoStep{
-    //todo make LinearAuto use this (its pretty much the same code)
     AutoStep[] steps;
     public StepSeries(Stepable... steps) {
         this.steps = Stepable.toAutoStepArray(steps);

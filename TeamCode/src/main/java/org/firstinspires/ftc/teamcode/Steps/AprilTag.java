@@ -133,9 +133,9 @@ public class AprilTag {
         private final double desiredDistance;
         private DriveTrain driveTrain;
         //  Modified from gain -> PID
-        private final PIDController SPEED_PID = new PIDController(0.01,0.000025,1.5);
-        private final PIDController STRAFE_PID = new PIDController(0.005,0.00005,2);
-        private final PIDController TURN_PID = new PIDController(0.01,0,0.25);
+        private final PIDController SPEED_PID = new PIDController(0.02,0,0);
+        private final PIDController STRAFE_PID = new PIDController(0.015,0,0);
+        private final PIDController TURN_PID = new PIDController(0.01,0,0);
 
         private final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value TODO (adjust for your robot)
         private final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value TODO (adjust for your robot)

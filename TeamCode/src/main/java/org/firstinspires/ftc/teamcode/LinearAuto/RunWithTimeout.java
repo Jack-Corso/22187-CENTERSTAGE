@@ -2,6 +2,9 @@ package org.firstinspires.ftc.teamcode.LinearAuto;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+/**
+ * Runs the given step, either until the step is {@link AutoStep#isFinished() finished}, or until the given amount of time has passed, then calls the steps {@link AutoStep#onFinish()}
+ */
 public class RunWithTimeout extends AutoStep{
     double seconds;
     AutoStep step;

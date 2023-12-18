@@ -55,9 +55,5 @@ public class RunSynchronously extends AutoStep {
         setFinished(Arrays.stream(steps).allMatch(Objects::isNull));
     }
     @Override
-    protected void onFinish() {
-        for (AutoStep step : removed) {
-            step.onFinish();
-        }
-    }
+    protected void onFinish() {}
 }

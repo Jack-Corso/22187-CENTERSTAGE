@@ -11,7 +11,8 @@ import java.util.Arrays;
 import java.util.function.IntFunction;
 
 /**
- * Runs the given {@link AutoStep}s in order, calling steps
+ * Runs the given {@link AutoStep}s in order. This Class extends {@link  LinearOpMode},
+ * and is responsible for passing in the {@link AutoStep#hardwareMap HardwareMap} and {@link AutoStep#telemetry Telemetry} instances for {@link AutoStep}
  */
 public abstract class LinearAuto extends LinearOpMode implements Stepable{
     StepSeries stepSeries;
@@ -23,12 +24,20 @@ public abstract class LinearAuto extends LinearOpMode implements Stepable{
         return stepSeries;
     }
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void runOpMode() {
+
         for (AutoStep step : stepSeries.steps) {
             if (step.runOnInit) AutoStep.initializeStep(step,hardwareMap,telemetry);
         }
+
         waitForStart();
-        AutoStep.runStep(stepSeries,hardwareMap,telemetry);
+        try {
+            AutoStep.runStep(stepSeries, hardwareMap, telemetry);
+        } catch (Exception e) {
+            telemetry.addData("stackTrace",Arrays.toString(e.getStackTrace()));
+            telemetry.update();
+            sleep(10000);
+        }
         requestOpModeStop();
     }
 }

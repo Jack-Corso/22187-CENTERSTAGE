@@ -18,5 +18,4 @@ public class RaceSynchronously extends RunSynchronously {
         super.run();
         setFinished(Arrays.stream(steps).anyMatch(AutoStep::isFinished));
     }
-
 }

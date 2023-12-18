@@ -12,14 +12,15 @@ import java.util.Arrays;
 
 public class Odometry {
     public static final String leftName = "hang"; // port 0
-    public static final String rightName = "right"; // port 2
     public static final String middleName = "intake"; // port 1
+    public static final String rightName = "right"; // port 2
+
     //todo fix ticksPerInch
     public static final double rightY = 6;
     public static final double leftY = -6;
     public static final double backX = 2;
-    //diameter in inches (44mm from gobilda website)
-    public static final double diameter = 1.89;
+    //diameter in inches (48mm from gobilda website)
+    public static final double diameter = 1.88976;
     //from gobilda website
     public static final int ticksPerRotation = 2000;
     //ticks/circumference

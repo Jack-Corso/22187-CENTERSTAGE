@@ -36,6 +36,7 @@ public class Rotate extends AutoStep {
     public void init() {
         pidController = new PIDController(pidCoefficients);
         imu = hardwareMap.get(IMU.class, "imu");
+        prevDegrees = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         driveTrain = new DriveTrain(hardwareMap);
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
         imu.resetYaw();

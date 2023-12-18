@@ -16,7 +16,7 @@ public class PIDController {
     double Kd;
     double error = 0;
     double lastError;
-    int pos;
+    double pos;
     double integral;
     double derivative;
     ArrayList<Boolean> finished = new ArrayList<>();
@@ -32,7 +32,7 @@ public class PIDController {
     public PIDController(PIDCoefficients pidCoefficients) {
         this(pidCoefficients.p, pidCoefficients.i, pidCoefficients.d);
     }
-    public void setTargetPos(int pos) {
+    public void setTargetPos(double pos) {
         timer.reset();
         this.pos = pos;
         lastError = 0;
@@ -73,11 +73,24 @@ public class PIDController {
         t.addData("Iterations",loops);
         t.addData("average loop time",timer.milliseconds()/loops);
     }
+
     public boolean isFinished() {
         return finished.stream().allMatch(i -> i);
     }
     private void updateFinished(boolean val) {
         finished.remove(0);
         finished.add(val);
+    }
+
+    public double getKp() {
+        return Kp;
+    }
+
+    public double getKi() {
+        return Ki;
+    }
+
+    public double getKd() {
+        return Kd;
     }
 }
