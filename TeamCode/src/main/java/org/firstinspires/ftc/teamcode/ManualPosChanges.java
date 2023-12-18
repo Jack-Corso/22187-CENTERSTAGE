@@ -4,10 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.subsystems.Claw;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
+import org.firstinspires.ftc.teamcode.subsystems.Hanger;
+import org.firstinspires.ftc.teamcode.subsystems.Intake;
 import org.firstinspires.ftc.teamcode.subsystems.Launcher;
+import org.firstinspires.ftc.teamcode.subsystems.PixelBox;
 import org.firstinspires.ftc.teamcode.subsystems.Slide;
+
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 @TeleOp(name="setPositions")
 public class ManualPosChanges extends LinearOpMode {
@@ -20,32 +25,45 @@ public class ManualPosChanges extends LinearOpMode {
             motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
         DriveTrain driveTrain = new DriveTrain(hardwareMap);
-        Slide slide = new Slide(hardwareMap);
-        Claw claw = new Claw(hardwareMap);
+        //Claw claw = new Claw(hardwareMap);
         Launcher launcher = new Launcher(hardwareMap);
+        Intake intake = new Intake(hardwareMap);
+        Hanger hang = new Hanger(hardwareMap);
+        Slide slide = new Slide(hardwareMap);
+        PixelBox box = new PixelBox(hardwareMap);
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive()) {
+
             //increase speed if right trigger is down
             speedDivider = 2.5;
             if (gamepad1.right_trigger > 0) speedDivider = 1;
-            //control slide
-            if (gamepad2.right_trigger > 0) slide.setSlide(0.25);
-            else if (gamepad2.left_trigger > 0) slide.setSlide(-0.25);
-            else slide.setSlide(0);
-            // control slide rotation
-            if (gamepad2.y) slide.setRotate(0.05);
-            else if (gamepad2.x) slide.setRotate(-0.05);
-            else slide.setRotate(0);
-            // control claw
-            if (gamepad2.b) claw.setClaw(1);
-            else if (gamepad2.a) claw.setClaw(0);
-            // control claw rotation
-            if (gamepad2.left_bumper) claw.setRotate(claw.getRotate()+0.01);
-            else if (gamepad2.right_bumper) claw.setRotate(claw.getRotate()-0.01);
+
             // control airplane launcher rotation
             if (gamepad2.dpad_up) launcher.set(launcher.getStored()+0.1);
             else if (gamepad2.dpad_down) launcher.set(launcher.getStored()-0.1);
+
+            // control intake
+            intake.setPower((int)gamepad2.right_trigger - (int) gamepad2.left_trigger);
+
+            // control hanging
+            if (gamepad2.b) hang.setPower(1);
+            else if (gamepad2.a) hang.setPower(-1);
+            else hang.setPower(0);
+
+            // control slide
+            if (gamepad2.y) slide.setSlide(1);
+            else if (gamepad2.x) slide.setSlide(-1);
+            else slide.setSlide(0);
+
+            // control outtake box door
+            if (gamepad2.left_bumper) box.setDoor(PixelBox.doorPositions.open);
+            else if (gamepad2.right_bumper) box.setDoor(PixelBox.doorPositions.close);
+
+            // control outtake box rotation
+            if (gamepad2.dpad_left) box.setRotate(PixelBox.rotatePositions.intakePos);
+            else if (gamepad2.dpad_right) box.setRotate(PixelBox.rotatePositions.outtakePos);
+
             // make the robot move with the controller
             double y = -gamepad1.left_stick_y / speedDivider; // Remember, this is reversed!
             double x = -gamepad1.left_stick_x * 1.1 / speedDivider; // Counteract imperfect strafing
@@ -59,10 +77,6 @@ public class ManualPosChanges extends LinearOpMode {
             telemetry.addData("BackLeft", driveTrain.getBackLeft());
             telemetry.addData("FrontRight", driveTrain.getFrontRight());
             telemetry.addData("BackRight", driveTrain.getBackRight());
-            telemetry.addData("Slide Rotation", slide.getRotate());
-            telemetry.addData("Slide",slide.getSlide());
-            telemetry.addData("clawRotate", claw.getStoredRotate());
-            telemetry.addData("claw", claw.getClaw());
             telemetry.addData("Launcher", launcher.getStored());
             telemetry.update();
             //sets motor power

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
+import androidx.annotation.NonNull;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -10,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  *     {@link #init()}, {@link #run()} (looping), {@link #onFinish()}. <p>
  *     The method {@link #runStep(AutoStep, HardwareMap, Telemetry)} can be used to execute a step fully
  */
-public abstract class AutoStep implements Runnable{
+public abstract class AutoStep implements  Stepable{
     /**
      * The {@link HardwareMap} instance passed in before the steps initialization. <p>
      * NOTE: This is not passed in on construction, and will be null until {@link #init()}
@@ -47,7 +49,6 @@ public abstract class AutoStep implements Runnable{
     /**
      * Called in a loop until {@link #setFinished(boolean)} is used to end the step
      */
-    @Override
     public abstract void run();
 
     /**
@@ -98,18 +99,54 @@ public abstract class AutoStep implements Runnable{
      * @param step the step to run
      * @param h the {@link HardwareMap} to be passed into the step
      * @param t the {@link Telemetry} to be passed into the step
+     * @see #runStepInLoop(AutoStep, HardwareMap, Telemetry)
      */
     public static void runStep(AutoStep step,HardwareMap h, Telemetry t) {
-        step.setTelemetry(t);
-        step.setHardWareMap(h);
-        while (!step.isFinished()) {
-            if (!step.initDone) {
-                step.init();
-                step.initDone = true;
-            }
-            step.run();
-        }
-        step.onFinish();
+        while (!runStepInLoop(step,h,t));
     }
 
+    /**
+     * Runs a given step's current method once. It is the users responsibility to stop running the step when it is finished, as it will continue to call {@link #onFinish()} every call after it finishes.
+     * Runs with the same specifications as {@link #runStep(AutoStep, HardwareMap, Telemetry)}
+     * <p>
+     *     NOTE: when the step finishes, {@link #onFinish()} is called, even if this method has already called {@link #init()} or {@link #run()}
+     * </p>
+     * @param step the step to run
+     * @param h the {@link HardwareMap} to be passed into the step
+     * @param t the {@link Telemetry} to be passed into the step
+     * @return the value returned by {@link #isFinished()}
+     * @see #runStep(AutoStep, HardwareMap, Telemetry)
+     */
+    public static boolean runStepInLoop(AutoStep step, HardwareMap h, Telemetry t) {
+        if (!step.isFinished()) {
+            if (!step.initDone) {
+                step.setTelemetry(t);
+                step.setHardWareMap(h);
+                step.init();
+                step.initDone = true;
+            } else {
+                step.run();
+            }
+        }
+        if (step.isFinished()) step.onFinish();
+        return step.isFinished();
+    }
+    public static boolean initializeStep(AutoStep step, HardwareMap h, Telemetry t) {
+        if (step.initDone) return false;
+        step.setTelemetry(t);
+        step.setHardWareMap(h);
+        step.init();
+        step.initDone = true;
+        return true;
+
+    }
+
+    /**
+     * Simply returns itself, allowing all AutoSteps to be used as a {@link Stepable}
+     * @return itself, using 'this'
+     */
+    @Override
+    public final AutoStep toAutoStep() {
+        return this;
+    }
 }

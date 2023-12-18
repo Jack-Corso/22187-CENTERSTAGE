@@ -4,6 +4,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+/**
+ * Calls the {@link Runnable#run()} method of the given {@link Runnable} once, then finishes
+ */
 public class RunnableStep extends AutoStep{
     Runnable runnable;
     public RunnableStep(Runnable r) {

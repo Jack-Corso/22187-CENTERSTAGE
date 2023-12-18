@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autos;
+ package org.firstinspires.ftc.teamcode.Autos;
 
 import androidx.annotation.RequiresPermission;
 
@@ -10,66 +10,59 @@ import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.StepSeries;
 import org.firstinspires.ftc.teamcode.LinearAuto.ToTelemetry;
 import org.firstinspires.ftc.teamcode.LinearAuto.WaitStep;
+import org.firstinspires.ftc.teamcode.Steps.MoveAutoArm;
+import org.firstinspires.ftc.teamcode.Steps.MoveAutoClaw;
 import org.firstinspires.ftc.teamcode.Steps.MoveClaw;
+import org.firstinspires.ftc.teamcode.Steps.MoveDropper;
 import org.firstinspires.ftc.teamcode.Steps.MoveForward;
+import org.firstinspires.ftc.teamcode.Steps.MoveTray;
 import org.firstinspires.ftc.teamcode.Steps.ReadTfod;
 import org.firstinspires.ftc.teamcode.Steps.Rotate;
 import org.firstinspires.ftc.teamcode.Steps.RotateArm;
+import org.firstinspires.ftc.teamcode.Steps.RotateBox;
+import org.firstinspires.ftc.teamcode.Steps.RotateClaw;
 import org.firstinspires.ftc.teamcode.Steps.RotateSlide;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
+import org.firstinspires.ftc.teamcode.subsystems.Dropper;
+import org.firstinspires.ftc.teamcode.subsystems.PixelBox;
+import org.firstinspires.ftc.teamcode.subsystems.Tray;
 
-public class TfodBase extends StepSeries {
+ public class TfodBase extends StepSeries {
    // static ReadTfod readTfod;
 //    public TfodBase(String color) {
 //        super(
 //                new InitStep(new MoveClaw(Claw.CLOSE)),
-//                new RunWithTimeout(readTfod = new ReadTfod(color),4),
-    static RunnableStep r;
+//
     public TfodBase(String color) {
         super(
-                new InitStep(new MoveClaw(Claw.CLOSE)),
+                //new InitStep(new RotateBox(Claw.CLOSE)),
+                new InitStep(new MoveDropper(Dropper.clamp)),
                 new RunWithTimeout(new ReadTfod(color),4),
-                new Strafe(4,-0.5),
-                new MoveForward(26,0.5),
-                r = new RunnableStep(()-> {
-                    if (ReadTfod.getResult() == 0) {
-                        AutoStep.runStep(new StepSeries(
-                                new Rotate(-112),
-                                new MoveForward(2,-0.5),
-                                new ToTelemetry("Result: " + ReadTfod.getResult(),false)
-                        ), r.getHardwareMap(),r.getTelemetry());
-                    } else if(ReadTfod.getResult() == 1) {
-                        AutoStep.runStep(new StepSeries(
-                                new MoveForward(20,0.25),
-                                new MoveForward(19,-0.25),
-                                new ToTelemetry("Result: " + ReadTfod.getResult(),false)),r.getHardwareMap(),r.getTelemetry() );
-                    } else {
-                        AutoStep.runStep(new StepSeries(
-                                new Rotate(75),
-                                new MoveForward(2,-0.5),
-                                new ToTelemetry("Result: " + ReadTfod.getResult(),false)
-                        ),r.getHardwareMap(),r.getTelemetry());
-                    }
-                }),
-//                new RunIf(ReadTfod.getResult() == 0, new StepSeries(
-//                        new Rotate(-70),
-//                        new MoveForward(3,-0.5),
-//                        new ToTelemetry("Result: " + ReadTfod.getResult(),false)
-//                )).elseIfDo(ReadTfod.getResult() == 2, new StepSeries(
-//                        new Rotate(70),
-//                        new MoveForward(3,-0.5),
-//                        new ToTelemetry("Result: " + ReadTfod.getResult(),false)
-//                )).elseDo(new StepSeries(
-//                        new MoveForward(20,0.25),
-//                        new MoveForward(20,-0.25),
-//                        new ToTelemetry("Result: " + ReadTfod.getResult(),false)
-//                )),
-                new RotateArm(RotateArm.Position.PICKUP),
-                new MoveClaw(Claw.OPEN),
-                new WaitStep(0.75),
-                new RotateArm(RotateArm.Position.HOME)
-
+                new MoveForward(2,0.25),
+                new Strafe(-1.5,0.25),
+                new MoveForward(23,0.5),
+                new RunIf(()->ReadTfod.getResult() == 0,
+                            new StepSeries(
+                                    new Rotate(-90),
+                                    new MoveForward(8,0.25)
+                            )
+                ).elseIfDo(()->ReadTfod.getResult() == 1,
+                        new StepSeries(
+                                new Strafe(-0.5,0.5),
+                                new MoveForward(7,0.25)
+                        )
+                ).elseDo(
+                        new StepSeries(
+                                new Rotate(90),
+                                new MoveForward(7,0.25)
+                        )
+                ),
+                new WaitStep(0.25),
+                new MoveDropper(Dropper.drop),
+                new WaitStep(0.5),
+                new MoveForward(-9,0.25)
+              //  new Strafe(100,0.25)
         );
 
 

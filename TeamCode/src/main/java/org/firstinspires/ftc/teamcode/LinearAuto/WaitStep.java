@@ -1,21 +1,22 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class WaitStep extends AutoStep{
-    long timeToWait;
-    long startTime;
+    double timeToWait;
+    ElapsedTime time = new ElapsedTime();
     public WaitStep(double seconds) {
-        timeToWait = (long) (seconds*1000);
+        timeToWait = seconds;
     }
     @Override
     public void init() {
-        startTime = System.currentTimeMillis();
+        time.reset();
     }
 
     @Override
     public void run() {
-        setFinished(System.currentTimeMillis()-startTime >= timeToWait);
+        setFinished(time.seconds() >= timeToWait);
     }
 
     @Override

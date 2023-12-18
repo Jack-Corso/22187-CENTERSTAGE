@@ -1,5 +1,8 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
+/**
+ * Runs a step fully during the initialization section of an OpMode
+ */
 public class InitStep extends AutoStep{
     AutoStep step;
     public InitStep(AutoStep step) {
@@ -8,13 +11,7 @@ public class InitStep extends AutoStep{
     }
     @Override
     public void init() {
-        while (!step.isFinished()) {
-            if (!step.initDone) {
-                step.setTelemetry(telemetry);
-                step.setHardWareMap(hardwareMap);
-                step.init();
-            } else step.run();
-        }
+        AutoStep.runStep(step,hardwareMap,telemetry);
         setFinished(true);
     }
 

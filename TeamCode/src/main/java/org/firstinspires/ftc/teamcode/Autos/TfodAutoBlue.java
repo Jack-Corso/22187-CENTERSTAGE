@@ -9,22 +9,21 @@ import org.firstinspires.ftc.teamcode.LinearAuto.RunWithTimeout;
 import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.StepSeries;
 import org.firstinspires.ftc.teamcode.LinearAuto.ToTelemetry;
+import org.firstinspires.ftc.teamcode.LinearAuto.WaitStep;
+import org.firstinspires.ftc.teamcode.Steps.MoveAutoArm;
+import org.firstinspires.ftc.teamcode.Steps.MoveAutoClaw;
 import org.firstinspires.ftc.teamcode.Steps.MoveForward;
 import org.firstinspires.ftc.teamcode.Steps.ReadTfod;
 import org.firstinspires.ftc.teamcode.Steps.Rotate;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
-@Autonomous(name="tfodAutoBlue")
+import org.firstinspires.ftc.teamcode.subsystems.AutoArm;
+
+@Autonomous(name="Blue")
 public class TfodAutoBlue extends LinearAuto {
     static RunnableStep r;
     public TfodAutoBlue() {
         super(
-//                new TfodBase(ReadTfod.BLUE)
                 new TfodBase(ReadTfod.BLUE)
-//                r = new RunnableStep(()->{
-//                    if (ReadTfod.getResult() == 0) AutoStep.runStep(new Rotate(112), r.getHardwareMap(),r.getTelemetry());
-//                    else if (ReadTfod.getResult() == 2) AutoStep.runStep(new Rotate(-75),r.getHardwareMap(),r.getTelemetry());
-//                    AutoStep.runStep(new MoveForward(28,0.25),r.getHardwareMap(),r.getTelemetry()),
-//                })
         );
     }
 }

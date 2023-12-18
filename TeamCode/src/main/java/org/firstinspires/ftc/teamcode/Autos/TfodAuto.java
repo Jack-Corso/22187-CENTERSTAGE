@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.LinearAuto.WaitStep;
 import org.firstinspires.ftc.teamcode.Steps.MoveForward;
 import org.firstinspires.ftc.teamcode.Steps.ReadTfod;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
-@Autonomous(name="tfodAutoRed")
+@Autonomous(name="Red")
 public class TfodAuto extends LinearAuto {
     public TfodAuto() {
         super(

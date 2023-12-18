@@ -1,9 +1,12 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
+import java.util.function.Supplier;
+
 public class ToTelemetry extends AutoStep{
-    String value;
+
+    Supplier<String> value;
     boolean continuous;
-    public ToTelemetry(String value,boolean continuous) {
+    public ToTelemetry(Supplier<String> value,boolean continuous) {
         this.value = value;
         this.continuous = continuous;
     }
@@ -13,7 +16,7 @@ public class ToTelemetry extends AutoStep{
 
     @Override
     public void run() {
-        telemetry.addLine(value);
+        telemetry.addLine(value.get());
         telemetry.update();
         setFinished(!continuous);
     }

@@ -4,18 +4,23 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Util;
+
 public class DriveTrain {
     DcMotor backLeft;
     DcMotor backRight;
     DcMotor frontLeft;
     DcMotor frontRight;
-    HardwareMap h;
-    public DriveTrain(HardwareMap hardwareMap) {
-        h = hardwareMap;
+    public DriveTrain(HardwareMap h) {
+        Util.initMotors(h);
         frontRight = h.dcMotor.get("frontRight");
         backRight = h.dcMotor.get("backRight");
         backLeft = h.dcMotor.get("backLeft");
         frontLeft = h.dcMotor.get("frontLeft");
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     }

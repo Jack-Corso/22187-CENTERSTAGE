@@ -14,9 +14,11 @@ public class Strafe extends AutoStep {
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
+    int mult = 1;
     public Strafe(double inches, double speed) {
         distance = (inches*46.2) * 0.85; //values from strafing at 0.5 speed. Should avoid speeds over 0.5 for consistency
         this.speed = speed;
+        if (inches < 0) mult = -1;
     }
     @Override
     public void init() {
@@ -27,15 +29,15 @@ public class Strafe extends AutoStep {
         frontLeft = hardwareMap.dcMotor.get("frontLeft");
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setPower(-speed);
-        frontRight.setPower(-speed);
-        backLeft.setPower(speed);
-        backRight.setPower(speed);
+        frontLeft.setPower(speed*mult);
+        frontRight.setPower(-speed*mult);
+        backLeft.setPower(-speed*mult);
+        backRight.setPower(speed*mult);
     }
 
     @Override
     public void run() {
-        setFinished(distance <= Math.abs(frontLeft.getCurrentPosition()));
+        setFinished(Math.abs(distance) <= Math.abs(frontLeft.getCurrentPosition()));
     }
 
     @Override

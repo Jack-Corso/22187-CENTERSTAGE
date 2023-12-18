@@ -131,14 +131,14 @@ public class ReadTfod extends AutoStep {
             if (x < 320) {
                 ReadTfod.setResult(1);
                 setFinished(true);
-                currentRecognitions.clear();
+                break;
             }
             else if (!currentRecognitions.isEmpty())  {
                 ReadTfod.setResult(2);
                 setFinished(true);
-                currentRecognitions.clear();
+                break;
             }
-            setFinished(true);
+            //setFinished(true);
             telemetry.addData(""," ");
             telemetry.addData("Image", "%s (%.0f %% Conf.)", recognition.getLabel(), recognition.getConfidence() * 100);
             telemetry.addData("- Position", "%.0f / %.0f", x, y);
