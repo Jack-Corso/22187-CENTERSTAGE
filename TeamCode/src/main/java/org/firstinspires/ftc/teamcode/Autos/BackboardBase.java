@@ -33,10 +33,12 @@ public class BackboardBase extends StepSeries {
                 new MoveAutoArm(AutoArm.ArmPresets.dropoff),
                 new WaitStep(0.5),
                 new MoveAutoClaw(MoveAutoClaw.RightConstants.OPEN_FULL),
-                new WaitStep(0.5),
+                new WaitStep(0.75),
+                new MoveAutoClaw(MoveAutoClaw.Constants.CLOSE_BOTH),
                 new MoveAutoArm(AutoArm.ArmPresets.inside),
                 new WaitStep(0.5),
-                new MoveForward(-3,0.25)
+                new MoveForward(-3,0.25),
+                new AprilTag.Close()
 //                //todo GO TO 1 AND STRAFE UNTIL DETECT
 //                //new RunWithTimeout(new AprilTag.DriveTo(ID,20),5),
 //                //new ToTelemetry("at 10!",false),

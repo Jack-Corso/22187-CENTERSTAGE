@@ -18,6 +18,7 @@ public abstract class AutoStep implements  Stepable{
      * NOTE: This is not passed in on construction, and will be null until {@link #init()}
      * @see #setHardWareMap(HardwareMap)
      */
+
     protected HardwareMap hardwareMap = null;
     /**
      * The {@link Telemetry} instance passed in before the steps initialization. <p>

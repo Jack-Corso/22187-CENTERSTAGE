@@ -20,21 +20,24 @@ public class BackDropAndTfod extends StepSeries {
         super (
             new InitStep(new MoveAutoClaw(MoveAutoClaw.Constants.CLOSE_BOTH)),
                 new TfodBase(color),
+                // transition from tfod -> backdrop
+                //BLUE
                 new RunIf(()->color.equals(ReadTfod.BLUE),
                     new StepSeries(
                             new RunIf(()->ReadTfod.getResult() == 2,
                                 new StepSeries(
-                                        new Rotate(-90),
                                         new Rotate(-90)
                                 )
                             ).elseIfDo(()->ReadTfod.getResult() == 1,
                                     new Rotate(-90)
+                            ).elseDo(
+                                    new Strafe(-5,0.5)
                             )
                     )
+                //RED
                 ).elseDo(
                         new RunIf(()->ReadTfod.getResult() == 0,
                                 new StepSeries(
-                                        new Rotate(90),
                                         new Rotate(90)
                                 )
                         ).elseIfDo(()->ReadTfod.getResult() == 1,
@@ -44,7 +47,7 @@ public class BackDropAndTfod extends StepSeries {
                                 )
                         ).elseDo(
                                 new StepSeries(
-                                new Rotate(30),
+                                new Rotate(120),
                                 new Strafe(-15,0.5)
                                 )
                         )

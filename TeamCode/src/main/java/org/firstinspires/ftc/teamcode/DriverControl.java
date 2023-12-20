@@ -19,7 +19,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Slide;
 
 @TeleOp(name = "TeleOp")
 public class DriverControl extends LinearOpMode {
-    double speedDivider = 5;
+    double speedMultiplier = 5;
     double inputDelay = 0.5;
     ElapsedTime inputTimer = new ElapsedTime();
     @Override
@@ -45,8 +45,9 @@ public class DriverControl extends LinearOpMode {
         if (isStopRequested()) return;
         while (opModeIsActive()) {
             //increase speed if right trigger is down
-            speedDivider = 1;
-            if (gamepad1.right_trigger > 0) speedDivider = 2;
+            speedMultiplier = 0.71;
+            if (gamepad1.right_trigger > 0) speedMultiplier = 1;
+            else if (gamepad1.left_trigger > 0) speedMultiplier = 0.355; // half of old motor speed
             // control intake
            // intake.setPower((int)gamepad2.right_trigger - (int) gamepad2.left_trigger);
             if (gamepad2.dpad_left) {
@@ -76,6 +77,7 @@ public class DriverControl extends LinearOpMode {
 //            // control outtake box rotation
 //            if (gamepad2.dpad_left) box.setRotate(Claw.CLOSE);
 //            else if (gamepad2.dpad_right) box.setRotate(Claw.OPEN);
+            //claw
             if (gamepad2.dpad_up && gamepad2.left_stick_button && gamepad2.right_stick_button) {
                 autoArm.setArm(AutoArm.ArmPresets.pickup);
                 try {
@@ -96,24 +98,22 @@ public class DriverControl extends LinearOpMode {
                     else autoArm.setRight(AutoArm.RightPresets.close);
                     inputTimer.reset();
                 }
-                if (gamepad2.right_trigger > 0)  {
-                    autoArm.setArm(AutoArm.ArmPresets.pickup);
-                    inputTimer.reset();
-                }
-                else if (gamepad2.left_trigger > 0) {
-                    autoArm.setArm(AutoArm.ArmPresets.dropoff);
-                    inputTimer.reset();
-                }
-                else if (gamepad2.dpad_up) {
-                    autoArm.setArm(AutoArm.ArmPresets.inside);
-                    inputTimer.reset();
-                }
+            }
+            //arm
+            if (gamepad2.right_trigger > 0)  {
+                autoArm.setArm(AutoArm.ArmPresets.pickup);
+            }
+            else if (gamepad2.left_trigger > 0) {
+                autoArm.setArm(AutoArm.ArmPresets.dropoff);
+            }
+            else if (gamepad2.dpad_up) {
+                autoArm.setArm(AutoArm.ArmPresets.inside);
             }
             // control claw rotation
             // make the robot move with the controller
-            double y = -gamepad1.left_stick_y / speedDivider; // Remember, this is reversed!
-            double x = gamepad1.left_stick_x * 1.1 / speedDivider; // Counteract imperfect strafing
-            double rx = gamepad1.right_stick_x / speedDivider;
+            double y = -gamepad1.left_stick_y * speedMultiplier; // Remember, this is reversed!
+            double x = gamepad1.left_stick_x * 1.1 * speedMultiplier; // Counteract imperfect strafing
+            double rx = gamepad1.right_stick_x * speedMultiplier;
             double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
             double frontLeftPower = (y + x + rx) / denominator;
             double backLeftPower = (y - x + rx) / denominator;

@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
+import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;
 import org.firstinspires.ftc.teamcode.PIDController;
 import org.firstinspires.ftc.teamcode.subsystems.DriveTrain;
 @Config
@@ -39,7 +40,7 @@ public class Rotate extends AutoStep {
         prevDegrees = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
         driveTrain = new DriveTrain(hardwareMap);
         imu.initialize(new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.RIGHT, RevHubOrientationOnRobot.UsbFacingDirection.FORWARD)));
-        imu.resetYaw();
+        //imu.resetYaw();
         pidController.setTargetPos(degrees);
         setFinished(degrees == (int) imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
     }
@@ -66,5 +67,8 @@ public class Rotate extends AutoStep {
     private int convertToNegative360(int degrees) {
         if (degrees > 0) return degrees-361;
         return degrees;
+    }
+    public static AutoStep resetIMU() {
+        return new RunnableStep((hardwareMap,telemetry)->hardwareMap.get(IMU.class, "imu").resetYaw());
     }
 }

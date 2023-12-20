@@ -2,6 +2,10 @@
 
 import androidx.annotation.RequiresPermission;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IMU;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.InitStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.RunIf;
@@ -36,6 +40,11 @@ import org.firstinspires.ftc.teamcode.subsystems.Tray;
 //
     public TfodBase(String color) {
         super(
+                new InitStep(Rotate.resetIMU()),
+                new InitStep(new RunnableStep((h,t)-> {
+                        t.addData("imu", h.get(IMU.class,"imu").getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES));
+                        t.update();
+                })),
                 //new InitStep(new RotateBox(Claw.CLOSE)),
                 new InitStep(new MoveDropper(Dropper.clamp)),
                 new RunWithTimeout(new ReadTfod(color),4),
@@ -45,7 +54,8 @@ import org.firstinspires.ftc.teamcode.subsystems.Tray;
                 new RunIf(()->ReadTfod.getResult() == 0,
                             new StepSeries(
                                     new Rotate(-90),
-                                    new MoveForward(8,0.25)
+                                    new MoveForward(8,0.25),
+                                    new Strafe(5,0.5)
                             )
                 ).elseIfDo(()->ReadTfod.getResult() == 1,
                         new StepSeries(
