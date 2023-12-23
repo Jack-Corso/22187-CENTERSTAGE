@@ -10,6 +10,7 @@ import java.util.Objects;
  * instead calling the appropriate method for each unfinished step repeatedly. Once all given steps are finished, this step also finishes.
  * <p>
  * Note: steps methods are called in the order the steps were passed in, and {@link AutoStep#onFinish()} is called directly after a step finishes, not after all steps finish
+ * @see RaceSynchronously
  */
 public class RunSynchronously extends AutoStep {
     AutoStep[] steps;

@@ -1,6 +1,14 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
+import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+/**
+ * This step runs all the given steps in order,
+ * waiting for a step to {@link #isFinished() finish} before {@link #runStep(AutoStep, HardwareMap, Telemetry) running} the next step.
+ * @see LinearAuto
+ */
 public class StepSeries extends AutoStep{
     AutoStep[] steps;
     public StepSeries(Stepable... steps) {

@@ -7,6 +7,7 @@ import java.util.Arrays;
  * <p>
  *     for more information on how steps are run, see {@link RunSynchronously}
  * </p>
+ * @see RunSynchronously
  */
 public class RaceSynchronously extends RunSynchronously {
     public RaceSynchronously(AutoStep... steps) {
