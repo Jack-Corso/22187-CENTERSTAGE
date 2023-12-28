@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Steps.AprilTag;
@@ -36,11 +37,12 @@ public class DriverControl extends LinearOpMode {
         Hanger hang = new Hanger(hardwareMap);
         Slide slide = new Slide(hardwareMap);
         AutoArm autoArm = new AutoArm(hardwareMap);
-        CRServo hangServo = hardwareMap.get(CRServo.class,"hangServo");
+        Servo hangServo = hardwareMap.get(Servo.class,"hangServo");
         //PixelBox box = new PixelBox(hardwareMap);
         AprilTag.DriveTo driveTo;
         boolean atGoal = true;
         //rotateArm.setTargetPos(0);
+        hangServo.setPosition(1);
         waitForStart();
         if (isStopRequested()) return;
         while (opModeIsActive()) {
@@ -51,13 +53,10 @@ public class DriverControl extends LinearOpMode {
             // control intake
            // intake.setPower((int)gamepad2.right_trigger - (int) gamepad2.left_trigger);
             if (gamepad2.dpad_left) {
-                hangServo.setPower(1);
                 intake.setPower(1);
             } else if (gamepad2.dpad_right) {
-                hangServo.setPower(-1);
                 intake.setPower(-1);
             } else {
-                hangServo.setPower(0);
                 intake.setPower(0);
             }
             // control hanging
@@ -80,10 +79,12 @@ public class DriverControl extends LinearOpMode {
             //claw
             if (gamepad2.dpad_up && gamepad2.left_stick_button && gamepad2.right_stick_button) {
                 autoArm.setArm(AutoArm.ArmPresets.pickup);
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException ignored) {}
+                sleep(500);
                 launcher.set(0.5);
+                sleep(500);
+                launcher.set(1);
+                sleep(100);
+                hangServo.setPosition(0);
             }
             if (inputDelay < inputTimer.seconds()) {
                 if (gamepad2.left_bumper) {

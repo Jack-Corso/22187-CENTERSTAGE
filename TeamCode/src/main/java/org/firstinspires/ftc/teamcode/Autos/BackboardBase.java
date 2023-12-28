@@ -1,6 +1,9 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import org.firstinspires.ftc.teamcode.LinearAuto.InitStep;
+import org.firstinspires.ftc.teamcode.LinearAuto.LinearAuto;
 import org.firstinspires.ftc.teamcode.LinearAuto.RaceSynchronously;
 import org.firstinspires.ftc.teamcode.LinearAuto.RunWithTimeout;
 import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;

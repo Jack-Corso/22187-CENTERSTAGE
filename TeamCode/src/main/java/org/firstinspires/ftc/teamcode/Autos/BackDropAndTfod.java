@@ -47,8 +47,8 @@ public class BackDropAndTfod extends StepSeries {
                                 )
                         ).elseDo(
                                 new StepSeries(
-                                new Rotate(120),
-                                new Strafe(-15,0.5)
+                                new Rotate(120)
+                                //new Strafe(-15,0.5)
                                 )
                         )
                 ),

@@ -50,6 +50,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Tray;
                 new RunWithTimeout(new ReadTfod(color),4),
                 new MoveForward(2,0.25),
                 new Strafe(-1.5,0.25),
+                new Rotate(0),
                 new MoveForward(23,0.5),
                 new RunIf(()->ReadTfod.getResult() == 0,
                             new StepSeries(
@@ -65,7 +66,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Tray;
                 ).elseDo(
                         new StepSeries(
                                 new Rotate(90),
-                                new MoveForward(7,0.25)
+                                new MoveForward(6.5,0.25)
                         )
                 ),
                 new WaitStep(0.25),

@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.localization.ThreeTrackingWheelLocalizer;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.Odometry;
 import org.firstinspires.ftc.teamcode.RoadRunner.util.Encoder;
 
 import java.util.Arrays;
@@ -32,10 +33,10 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
     public static double WHEEL_RADIUS = 0.945; // in
     public static double GEAR_RATIO = 1; // output (wheel) speed / input (encoder) speed
 
-    public static double LATERAL_DISTANCE = 12.415; // in; distance between the left and right wheels
-    public static double FORWARD_OFFSET = 2; // in; offset of the lateral wheel
+    public static double LATERAL_DISTANCE = 12.3843; //(12.25 literal) in; distance between the left and right wheels
+    public static double FORWARD_OFFSET = 4.125; // in; offset of the lateral wheel
     // added to tune dead wheels
-    public static double X_MULTIPLIER = 1.131;
+    public static double X_MULTIPLIER = 1;
     public static double Y_MULTIPLIER = 1;
 
 
@@ -53,9 +54,9 @@ public class StandardTrackingWheelLocalizer extends ThreeTrackingWheelLocalizer 
         lastEncPositions = lastTrackingEncPositions;
         lastEncVels = lastTrackingEncVels;
 
-        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "hang"));
-        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "right"));
-        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, "back"));
+        leftEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, Odometry.leftName));
+        rightEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, Odometry.rightName));
+        frontEncoder = new Encoder(hardwareMap.get(DcMotorEx.class, Odometry.middleName));
 
         // TODO: reverse any encoders using Encoder.setDirection(Encoder.Direction.REVERSE)
     }

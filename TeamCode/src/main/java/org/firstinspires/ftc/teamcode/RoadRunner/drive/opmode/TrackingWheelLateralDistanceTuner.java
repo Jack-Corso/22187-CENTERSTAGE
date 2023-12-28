@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
@@ -69,7 +70,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         if (!(drive.getLocalizer() instanceof StandardTrackingWheelLocalizer)) {
             RobotLog.setGlobalErrorMsg("StandardTrackingWheelLocalizer is not being set in the "
                     + "drive class. Ensure that \"setLocalizer(new StandardTrackingWheelLocalizer"
@@ -86,7 +87,7 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
-
+        //drive.setDrivePower(new Pose2d(0, 1, -1));
         telemetry.clearAll();
         telemetry.update();
 
@@ -98,7 +99,6 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
         while (!isStopRequested() && !tuningFinished) {
             Pose2d vel = new Pose2d(0, 0, -gamepad1.right_stick_x);
             drive.setDrivePower(vel);
-
             drive.update();
 
             double heading = drive.getPoseEstimate().getHeading();
@@ -110,6 +110,8 @@ public class TrackingWheelLateralDistanceTuner extends LinearOpMode {
             telemetry.clearAll();
             telemetry.addLine("Total Heading (deg): " + Math.toDegrees(headingAccumulator));
             telemetry.addLine("Raw Heading (deg): " + Math.toDegrees(heading));
+            telemetry.addData("Drive power: ", drive.getWheelVelocities());
+            telemetry.addData("gamepad1 position: ", gamepad1.right_stick_x);
             telemetry.addLine();
             telemetry.addLine("Press Y/△ to conclude routine");
             telemetry.update();
