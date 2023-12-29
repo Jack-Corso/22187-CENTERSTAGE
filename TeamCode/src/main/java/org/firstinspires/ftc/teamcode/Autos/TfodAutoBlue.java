@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.LinearAuto;
@@ -17,13 +18,14 @@ import org.firstinspires.ftc.teamcode.Steps.ReadTfod;
 import org.firstinspires.ftc.teamcode.Steps.Rotate;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
 import org.firstinspires.ftc.teamcode.subsystems.AutoArm;
-
+@Deprecated
+@Disabled
 @Autonomous(name="Blue")
 public class TfodAutoBlue extends LinearAuto {
     static RunnableStep r;
     public TfodAutoBlue() {
         super(
-                new TfodBase(ReadTfod.BLUE)
+                new TfodBase(ReadTfod.BLUE,0)
         );
     }
 }

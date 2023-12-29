@@ -43,6 +43,6 @@ public class AutoArm {
     public static final class ArmPresets {
         public static final double pickup = 1;
         public static final double inside = 0;
-        public static final double dropoff = 0.6;
+        public static final double dropoff = 0.65;
     }
 }

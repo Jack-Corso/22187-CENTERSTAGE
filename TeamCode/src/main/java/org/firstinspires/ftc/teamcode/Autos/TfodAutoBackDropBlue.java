@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.LinearAuto.InitStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.LinearAuto;
@@ -14,7 +15,8 @@ import org.firstinspires.ftc.teamcode.Steps.ReadTfod;
 import org.firstinspires.ftc.teamcode.Steps.Rotate;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
-
+@Deprecated
+@Disabled
 @Autonomous(name="BlueBackdrop")
 public class TfodAutoBackDropBlue extends LinearAuto {
     public TfodAutoBackDropBlue() {

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autos;
 
+import androidx.annotation.RequiresPermission;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -40,21 +42,15 @@ import org.firstinspires.ftc.teamcode.subsystems.Dropper;
  * Used for testing purposes.
  */
 public class MoveForwardAuto extends LinearAuto {
+    //try not to use this, try to use the proper auto instead (see AutoKey.txt)
     public static int pos = 0;
-    public static int loc = 2;
+    public static int loc = 1;
+    public static String color = ReadTfod.RED;
     public MoveForwardAuto() {
         super(
-                new InitStep(new MoveDropper(Dropper.clamp)),
-                RoadRunner.initialize(StartPositions.startPositions[loc]),
-                RoadRunner.followTrajectory(()->
-                        RoadRunner.trajectoryBuilder()
-                                //.forward(20)
-                                .splineTo(StartPositions.spikePositions[loc][3],Math.toRadians(90))
-                                .splineTo(StartPositions.spikePositions[loc][pos],RoadRunner.driveTrain().getPoseEstimate().getHeading()+StartPositions.spikeRotation[pos])
-                                .build()
-                ),
-                new WaitStep(0.5),
-                new MoveDropper(Dropper.drop)
+                new TfodBase(color,loc),
+                StartPositions.backBoardTransition(loc, ReadTfod.getResult()),
+                new BackboardBase(()->AprilTag.getIDFromDetect(color,ReadTfod.getResult()))
         );
     }
 }

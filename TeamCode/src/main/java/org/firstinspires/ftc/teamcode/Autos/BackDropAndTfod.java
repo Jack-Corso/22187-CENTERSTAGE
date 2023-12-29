@@ -14,12 +14,12 @@ import org.firstinspires.ftc.teamcode.Steps.Rotate;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
 
 import java.util.Objects;
-
+@Deprecated
 public class BackDropAndTfod extends StepSeries {
     public BackDropAndTfod(String color) {
         super (
             new InitStep(new MoveAutoClaw(MoveAutoClaw.Constants.CLOSE_BOTH)),
-                new TfodBase(color),
+                new TfodBase(color,0),
                 // transition from tfod -> backdrop
                 //BLUE
                 new RunIf(()->color.equals(ReadTfod.BLUE),

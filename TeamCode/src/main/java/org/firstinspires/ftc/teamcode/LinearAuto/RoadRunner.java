@@ -9,6 +9,8 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.RoadRunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.RoadRunner.trajectorysequence.TrajectorySequenceBuilder;
 
 import java.util.function.Supplier;
 
@@ -23,11 +25,23 @@ public final class RoadRunner {
     public static SampleMecanumDrive driveTrain() {
         return driveTrain;
     }
+    public static TrajectoryBuilder trajectoryBuilder(boolean reversed) {
+        return driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate(),reversed);
+    }
     public static TrajectoryBuilder trajectoryBuilder() {
         return driveTrain.trajectoryBuilder(driveTrain.getPoseEstimate());
     }
+    public static TrajectoryBuilder trajectoryBuilder(double startingAngle) {
+        return driveTrain().trajectoryBuilder(driveTrain.getPoseEstimate(),startingAngle);
+    }
+    public static TrajectorySequenceBuilder trajectorySequenceBuilder() {
+        return driveTrain.trajectorySequenceBuilder(driveTrain.getPoseEstimate());
+    }
     public static AutoStep followTrajectory(Supplier<Trajectory> t) {
-        return new RunnableStep(()->{driveTrain.followTrajectory(t.get());});
+        return new RunnableStep(()->driveTrain.followTrajectory(t.get()));
+    }
+    public static AutoStep followTrajectorySequence(Supplier<TrajectorySequence> t) {
+        return  new RunnableStep(()->driveTrain.followTrajectorySequence(t.get()));
     }
     public static AutoStep rotate(double radians) {
         return new RunnableStep(()->driveTrain.turn(radians));

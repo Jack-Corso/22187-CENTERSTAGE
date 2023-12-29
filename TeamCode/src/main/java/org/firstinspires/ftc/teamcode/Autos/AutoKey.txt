@@ -1,0 +1,21 @@
+Name:
+    Close - backdrop side
+    Far - opposite backdrop side
+    Spike - just the spike mark
+    Backdrop - spike mark + backdrop
+    B - blue
+    R - red
+    (names in the driver hub may differ slightly, but should follow similar rules)
+Finished Autos:
+    CloseBackdropB
+    CloseSpikeB
+    CloseSpikeR
+    FarSpikeB
+    FarSpikeR
+Unfinished Autos:
+    CloseBackDropR
+    FarBackDropB
+    FarBackDropR
+    (theses are notated with @Disabled, so will not show up on the driver hub, just remove this tag to test)
+NOTE:
+    all of these autos should have the structure finished - you should be able to simply run the  - most if not all changes are going to be in StartPositions
