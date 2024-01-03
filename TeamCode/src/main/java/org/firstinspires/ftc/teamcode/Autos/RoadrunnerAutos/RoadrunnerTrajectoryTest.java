@@ -1,12 +1,16 @@
-package org.firstinspires.ftc.teamcode.Autos;
+package org.firstinspires.ftc.teamcode.Autos.RoadrunnerAutos;
 
 import androidx.annotation.RequiresPermission;
+import androidx.appcompat.widget.VectorEnabledTintResources;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -24,6 +28,7 @@ import org.firstinspires.ftc.teamcode.LinearAuto.ToTelemetry;
 import org.firstinspires.ftc.teamcode.LinearAuto.WaitStep;
 import org.firstinspires.ftc.teamcode.Odometry;
 import org.firstinspires.ftc.teamcode.RoadRunner.StartPositions;
+import org.firstinspires.ftc.teamcode.RoadRunner.Trajectorys;
 import org.firstinspires.ftc.teamcode.RoadRunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.Steps.AprilTag;
 import org.firstinspires.ftc.teamcode.Steps.MoveAutoArm;
@@ -35,23 +40,41 @@ import org.firstinspires.ftc.teamcode.Steps.Rotate;
 import org.firstinspires.ftc.teamcode.Steps.Strafe;
 import org.firstinspires.ftc.teamcode.subsystems.AutoArm;
 import org.firstinspires.ftc.teamcode.subsystems.Dropper;
-
-@Autonomous(name = "moveForward")
 @Config
-/**
- * Used for testing purposes.
- */
-public class MoveForwardAuto extends LinearAuto {
-    //try not to use this, try to use the proper auto instead (see AutoKey.txt)
-    public static int pos = 0;
-    public static int loc = 2;
-    public static String color = ReadTfod.BLUE;
-    public MoveForwardAuto() {
-        super(
+@Autonomous(name = "RoadrunnerTrajectoryTest")
+public class RoadrunnerTrajectoryTest extends LinearOpMode {
 
-                new TfodBase(color,loc)
-//                StartPositions.backBoardTransition(loc, ReadTfod.getResult()),
-//                new BackboardBase(()->AprilTag.getIDFromDetect(color,ReadTfod.getResult()))
-        );
+    public static double TweakVal1=0;
+    public static double TweakVal2=0;
+    public static double TweakVal3=0;
+    public static double TweakVal4=0;
+
+
+
+    @Override
+    public void runOpMode() throws InterruptedException {
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+                Trajectory test = drive.trajectoryBuilder(new Pose2d())
+                        .strafeTo(new Vector2d(24, 0))
+                        .splineToConstantHeading(new Vector2d(36, 12), 0)
+        //            .splineToConstantHeading(new Vector2d(48, 12), 0)
+
+                        .build();
+
+
+                Trajectory reset = drive.trajectoryBuilder(test.end())
+                        .strafeTo(new Vector2d(0, 0))
+                        .build();
+    //    AutoStep.runStep(new ReadTfod("BLUE"),hardwareMap,telemetry);
+
+//        RoadRunner.followTrajectory(SpikeMid);
+//ReadTfod.getResult(
+        drive.setPoseEstimate(StartPositions.startPositions[0]);
+        waitForStart();
+        AutoStep.runStep(new ReadTfod("BLUE"),hardwareMap,telemetry);
+        drive.followTrajectory(test);
+        AutoStep.runStep(new MoveAutoArm(AutoArm.ArmPresets.dropoff),hardwareMap,telemetry);
+        drive.followTrajectory(reset);
     }
+
 }
