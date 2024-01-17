@@ -1,15 +1,32 @@
 package org.firstinspires.ftc.teamcode.LinearAuto;
 
+import android.os.Environment;
+import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeManagerImpl;
+import com.qualcomm.robotcore.eventloop.opmode.OpModeRegister;
 import com.qualcomm.robotcore.hardware.Blinker;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.internal.opmode.OpModeServices;
 import org.firstinspires.ftc.teamcode.Autos.TfodAutoBluePark;
+import org.threeten.bp.Instant;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.sql.Date;
 import java.util.Arrays;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.IntFunction;
 
 /**
@@ -40,10 +57,24 @@ public abstract class LinearAuto extends LinearOpMode implements Stepable{
         try {
             AutoStep.runStep(stepSeries, hardwareMap, telemetry);
         } catch (Exception e) {
-            telemetry.addData("stackTrace",Arrays.toString(e.getStackTrace()));
-            telemetry.update();
+            logException(e);
             throw e;
         }
         requestOpModeStop();
+    }
+    public void logException(Exception e) {
+        try {
+            File log = new File(
+                    Environment.getExternalStorageDirectory().getAbsolutePath()
+                            + "/ExceptionLogs/"
+                            + e.getClass().getSimpleName() + ":"+ System.currentTimeMillis() + ".txt"
+            );
+            log.createNewFile();
+            PrintStream logPrintStream = new PrintStream(log);
+            logPrintStream.println(Arrays.toString(e.getStackTrace()));
+            logPrintStream.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 }

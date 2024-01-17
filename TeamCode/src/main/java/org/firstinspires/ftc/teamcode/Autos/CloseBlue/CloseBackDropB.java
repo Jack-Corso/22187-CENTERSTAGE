@@ -15,7 +15,7 @@ public class CloseBackDropB extends LinearAuto {
     public CloseBackDropB() {
         super(
                 new TfodBase(ReadTfod.BLUE,0),
-                StartPositions.backBoardTransition(0,ReadTfod.getResult()),
+                StartPositions.backBoardTransition(0,ReadTfod::getResult),
                 new BackboardBase(()-> AprilTag.getIDFromDetect(ReadTfod.BLUE,ReadTfod.getResult()))
         );
     }

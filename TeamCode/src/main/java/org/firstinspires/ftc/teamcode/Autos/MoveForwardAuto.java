@@ -48,9 +48,10 @@ public class MoveForwardAuto extends LinearAuto {
     public static String color = ReadTfod.RED;
     public MoveForwardAuto() {
         super(
-                new TfodBase(color,loc),
-                StartPositions.backBoardTransition(loc, ReadTfod.getResult()),
-                new BackboardBase(()->AprilTag.getIDFromDetect(color,ReadTfod.getResult()))
+                new InitStep(new AprilTag.Initialize())
+                //new TfodBase(color,loc),
+                //StartPositions.backBoardTransition(loc, ReadTfod::getResult),
+                //new BackboardBase(()->AprilTag.getIDFromDetect(color,ReadTfod.getResult()))
         );
     }
 }

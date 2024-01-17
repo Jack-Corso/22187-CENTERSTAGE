@@ -6,6 +6,12 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.RoadRunner;
+import org.firstinspires.ftc.teamcode.LinearAuto.RunIf;
+import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;
+import org.firstinspires.ftc.teamcode.LinearAuto.ToTelemetry;
+import org.firstinspires.ftc.teamcode.Odometry;
+
+import java.util.function.IntSupplier;
 
 @Config
 public class StartPositions {
@@ -36,7 +42,7 @@ public class StartPositions {
     public static Vector2d[][] spikePositions = {
             {
                     //left
-                    new Vector2d(-20.25,-30),
+                    new Vector2d(-19,-30),
                     //middle
                     new Vector2d(-12,-28),
                     //right
@@ -44,28 +50,40 @@ public class StartPositions {
                     //"start" point
                     new Vector2d(-12,-40)
             },
-            {
-                    new Vector2d(1.5,35.25),
-                    new Vector2d(-12,28),
+            { //close red
+                    //left
+                    new Vector2d(0,33.25),
+                    //middle
+                    new Vector2d(-12,27),
+                    //right
                     new Vector2d(-17.75,34),
-                    new Vector2d(-12,40),
+                    //"mid"-point
+                    new Vector2d(-12,44),
             },
-            {
+            { //far blue
+                    //left
                     new Vector2d(23.5,-35.25),
+                    //middle
                     new Vector2d(36,-28),
+                    //right
                     new Vector2d(41.75,-34),
+                    //"mid"-point
                     new Vector2d(36,-40)
             },
-            {
-                    new Vector2d(44.25,30),
+            { //far red
+                    //left
+                    new Vector2d(43.25,30),
+                    //middle
                     new Vector2d(36,28),
+                    //right
                     new Vector2d(24.5,36),
+                    //"mid"-point
                     new Vector2d(36,40)
             }
     };
     // the rotation of the robot when trying to place on the corresponding spike mark
     public static double[] spikeRotation = {
-            Math.toRadians(90), //left | okay-change if needed
+            Math.toRadians(30), //left | okay-change if needed
             Math.toRadians(0), //middle | good
             Math.toRadians(-90) //right | good
     };
@@ -79,7 +97,7 @@ public class StartPositions {
     //(*) These are the positions at which the camera can see and drive to the backdrop april tags
     public static Pose2d[] backboardPositions = {
             new Pose2d(-12,-48,Math.toRadians(180)), //blue side | good
-            new Pose2d(-12,12,Math.toRadians(155)) //red side | x and y are good, verify angle
+            new Pose2d(-20.5,12,Math.toRadians(170)) //red side | x and y are good, verify angle
     };
     //TODO fill this out - this is the main goal
     /*
@@ -87,7 +105,7 @@ public class StartPositions {
     I recommend you start with going through the gate for the far sides - if you want to add an alternative path just add a boolean "alternative" argument
     If you want to move the robot to a more centered position between the spike marks after dropping, moving back 11 has worked well so far
      */
-    public static AutoStep backBoardTransition(int loc, int pos /*ReadTfod.getResult() (spike mark)*/) {
+    public static AutoStep backBoardTransition(int loc, IntSupplier pos /*ReadTfod.getResult() (spike mark)*/) {
         if (loc == 0) { //close blue | finished
             //no need for alternate positions here, this trajectory works will all 3 spike marks
             return RoadRunner.followTrajectorySequence(()->
@@ -97,8 +115,8 @@ public class StartPositions {
                             .build()
             );
         } else if (loc == 1) { //close red
-            if (pos == 1) { //middle
-                /*
+            return new RunIf(()->pos.getAsInt()==1,
+                     /*
                       *------<
                              |
                     --O--    |
@@ -106,9 +124,17 @@ public class StartPositions {
                  |    ----|--^
                  |        |
                  */
-                return null; //TODO
-            } else { //left & right
-                /*
+                    RoadRunner.followTrajectorySequence(()->
+                            RoadRunner.trajectorySequenceBuilder()
+                                    .back(11)
+                                    .splineToConstantHeading(new Vector2d(-24,35.75),RoadRunner.driveTrain().getPoseEstimate().getHeading())
+                                    //.splineToLinearHeading(new Pose2d(-24,24,backboardPositions[1].getHeading()),backboardPositions[1].getHeading())
+                                    //.lineTo(new Vector2d(-36,2))
+                                    .splineToLinearHeading(backboardPositions[1],backboardPositions[1].getHeading())
+                                    .build()
+                            )
+            ).elseIfDo(()->pos.getAsInt()==2,
+                    /*
                       *
                       |
                     -----
@@ -116,26 +142,74 @@ public class StartPositions {
                  O    |   O
                  |        |
                  */
-                return null; //TODO
-            }
+                    RoadRunner.followTrajectorySequence(()->
+                            RoadRunner.trajectorySequenceBuilder()
+                                    .back(12)
+                                    .lineToLinearHeading(new Pose2d(-12,12,backboardPositions[1].getHeading()))
+                                    .splineToConstantHeading(backboardPositions[1].vec().plus(new Vector2d(8)),backboardPositions[1].getHeading())
+                                    .build()
+                            )
+            ).elseDo(
+                    RoadRunner.followTrajectorySequence(()->
+                            RoadRunner.trajectorySequenceBuilder()
+                                    .back(16)
+                                    .lineToLinearHeading(new Pose2d(-12,12,backboardPositions[1].getHeading()))
+                                    .splineToConstantHeading(backboardPositions[1].vec(),backboardPositions[1].getHeading())
+                                    .build()
+                    )
+            );
         } else if (loc == 2) { //far blue
-            if (pos == 0) { //left
-                return null; //TODO
-            }
-            else if (pos == 1) { //middle
-                return null; //TODO
-            } else { // right
-                return null; //TODO
-            }
+            return new RunIf(()->pos.getAsInt()!=2,
+                     RoadRunner.followTrajectorySequence(()->
+                             RoadRunner.trajectorySequenceBuilder()
+                                     .back(16)
+                                     .lineToLinearHeading(new Pose2d(34,-60,Math.toRadians(90)))
+                                     //.lineToConstantHeading(backboardPositions[0].vec())
+                                     .lineToConstantHeading(new Vector2d(-18,-60))
+                                     .lineToLinearHeading(backboardPositions[0].plus(new Pose2d(-2)))
+                                     .build()
+
+                     )
+            ).elseDo(
+                    RoadRunner.followTrajectorySequence(()->
+                            RoadRunner.trajectorySequenceBuilder()
+                                    .back(12)
+                                    .lineToLinearHeading(new Pose2d(34,-60,Math.toRadians(90)))
+                                    //.lineToConstantHeading(backboardPositions[0].vec())
+                                    .lineToConstantHeading(new Vector2d(-18,-60))
+                                    .lineToLinearHeading(backboardPositions[0].plus(new Pose2d(-2)))
+                                    .build()
+
+                    )
+            );
         } else { // far red
-            if (pos == 0) { // left
-                return null; //TODO
-            }
-            else if (pos == 1) { // middle
-                return null; //TODO
-            } else { // right
-                return null; //TODO
-            }
+            return new RunIf(()->pos.getAsInt()==0,
+                    RoadRunner.followTrajectorySequence(()->
+                            RoadRunner.trajectorySequenceBuilder()
+                                    .back(16)
+                                    .lineToLinearHeading(new Pose2d(34,12,0))
+                                    .splineToLinearHeading(backboardPositions[1],backboardPositions[1].getHeading())
+                                    .build()
+                    )
+            ).elseIfDo(()->pos.getAsInt()==1,
+                    RoadRunner.followTrajectorySequence(()->
+                            RoadRunner.trajectorySequenceBuilder()
+                                    .back(4)
+                                    .splineToConstantHeading(new Vector2d(10,32),startPositions[3].getHeading())
+                                    .turn(Math.toRadians(-90))
+                                    .lineTo(new Vector2d(10,12)) //.strafeTo(10,12)
+                                    .splineToLinearHeading(backboardPositions[1],backboardPositions[1].getHeading())
+                                    .build()
+                            )
+            ).elseDo(
+                    RoadRunner.followTrajectorySequence(()->
+                            RoadRunner.trajectorySequenceBuilder()
+                                    .back(11)
+                                    .lineToLinearHeading(new Pose2d(34,12,0))
+                                    .splineToLinearHeading(backboardPositions[1],backboardPositions[1].getHeading())
+                                    .build()
+                    )
+            );
         }
     }
     //"old" code, can be ignored

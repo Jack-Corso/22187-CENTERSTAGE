@@ -2,10 +2,13 @@ package org.firstinspires.ftc.teamcode.Steps;
 
 import android.annotation.SuppressLint;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.BuiltinCameraDirection;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.ExposureControl;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.controls.GainControl;
 import org.firstinspires.ftc.teamcode.LinearAuto.AutoStep;
 import org.firstinspires.ftc.teamcode.LinearAuto.RunnableStep;
 import org.firstinspires.ftc.teamcode.PIDController;
@@ -16,9 +19,11 @@ import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.function.IntSupplier;
-
+@Config
 public class AprilTag {
+    public static int gain = 100;
     /**
      * The variable to store our instance of the AprilTag processor.
      */
@@ -42,6 +47,11 @@ public class AprilTag {
         @Override
         public void init() {
             initAprilTag();
+            try {
+                setManualExposure(6, gain);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             telemetry.addLine("Initialized AprilTag");
             telemetry.update();
             setFinished(true);
@@ -54,6 +64,36 @@ public class AprilTag {
 
         @Override
         protected void onFinish() {
+
+        }
+        private void setManualExposure(int exposureMS, int gain) throws InterruptedException {
+            // Wait for the camera to be open, then use the controls
+            if (visionPortal == null) {
+                return;
+            }
+
+            // Make sure camera is streaming before we try to set the exposure controls
+            if (visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING) {
+                telemetry.addData("Camera", "Waiting");
+                telemetry.update();
+                while ((visionPortal.getCameraState() != VisionPortal.CameraState.STREAMING)) {
+                    Thread.sleep(20);
+                }
+                telemetry.addData("Camera", "Ready");
+                telemetry.update();
+            }
+
+            // Set camera controls unless we are stopping.
+                ExposureControl exposureControl = visionPortal.getCameraControl(ExposureControl.class);
+                if (exposureControl.getMode() != ExposureControl.Mode.Manual) {
+                    exposureControl.setMode(ExposureControl.Mode.Manual);
+                    Thread.sleep(50);
+                }
+                exposureControl.setExposure((long)exposureMS, TimeUnit.MILLISECONDS);
+                Thread.sleep(20);
+                GainControl gainControl = visionPortal.getCameraControl(GainControl.class);
+                gainControl.setGain(gain);
+                Thread.sleep(20);
 
         }
         private void initAprilTag() {
@@ -139,7 +179,7 @@ public class AprilTag {
 
         private final double MAX_AUTO_SPEED = 0.5;   //  Clip the approach speed to this max value TODO (adjust for your robot)
         private final double MAX_AUTO_STRAFE= 0.5;   //  Clip the approach speed to this max value TODO (adjust for your robot)
-        private final double MAX_AUTO_TURN  = 0.3;   //  Clip the turn speed to this max value TODO (adjust for your robot)
+        private final double MAX_AUTO_TURN  = 0.5;   //  Clip the turn speed to this max value TODO (adjust for your robot)
 
         public DriveTo(int ID, double desiredDistance) {
             this(()->ID,desiredDistance);
@@ -167,7 +207,11 @@ public class AprilTag {
 //                drive  = Range.clip(rangeError * SPEED_GAIN, -MAX_AUTO_SPEED, MAX_AUTO_SPEED);
 //                turn   = Range.clip(headingError * TURN_GAIN, -MAX_AUTO_TURN, MAX_AUTO_TURN) ;
 //                strafe = Range.clip(-yawError * STRAFE_GAIN, -MAX_AUTO_STRAFE, MAX_AUTO_STRAFE);
-                moveRobot(-SPEED_PID.motorSpeed(rangeError),-STRAFE_PID.motorSpeed(-yawError),-TURN_PID.motorSpeed(headingError));
+                moveRobot(
+                        -Math.max(SPEED_PID.motorSpeed(rangeError),-MAX_AUTO_SPEED),
+                        -Math.max(STRAFE_PID.motorSpeed(-yawError),-MAX_AUTO_STRAFE),
+                        -Math.max(TURN_PID.motorSpeed(headingError),-MAX_AUTO_TURN)
+                );
                 telemetry.addData("Speed Error", rangeError);
                 telemetry.addData("Speed Output", -SPEED_PID.motorSpeed(rangeError));
                 telemetry.addData("Strafe Error", yawError);
